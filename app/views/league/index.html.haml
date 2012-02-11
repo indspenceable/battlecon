@@ -1,0 +1,11 @@
+%h1 Welcome to #{active_league.name}!
+
+%h2 Players
+%ul
+  - active_league.players.each do |p|
+    %li= p.name
+
+%h2 Games
+%ul
+  - active_league.games.each do |g|
+    %li Game!

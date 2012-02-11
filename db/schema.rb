@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(:version => 20120211201711) do
   end
 
   create_table "games", :force => true do |t|
+    t.integer  "league_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -32,6 +33,7 @@ ActiveRecord::Schema.define(:version => 20120211201711) do
 
   create_table "players", :force => true do |t|
     t.string   "name"
+    t.integer  "league_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
