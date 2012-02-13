@@ -29,8 +29,6 @@ body {
   float: left;
 }
 
-
-
 .nav {
   text-align: center;
 }
@@ -40,15 +38,29 @@ body {
 }
 .characters {
 }
+
+h2{
+  text-align: center;
+}
+
+.box {
+  border-radius: 3px;
+  border: 1px solid black;
+  padding: 3px;
+  margin: 3px;
+}
+
 .thumbnail {
   width: 50px;
 }
 table{
   border-spacing: 0px;
 }
-td {
-  border-left: 1px solid black;
-  border-top: 1px solid black;
+table.stats{
+  width: 100%;
+}
+table.characters td {
+  border: 1px solid black;
   
   margin: 0px;
   text-align: center;

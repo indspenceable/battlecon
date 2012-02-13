@@ -3,13 +3,21 @@
 %table.characters
   - Character.all.each do |c|
     = link_to image_tag("character-icons/#{c.name.downcase}.png", :class => 'thumbnail'), c
-%h2 
-  - if @character.games.count > 0
-    Win Rate: #{(@character.wins.count * 100.0 / @character.games.count).to_i}%
-  - else
-    No games played.
-%h2 
-  -if @character.wins.count > 0
-    Best Matchup: #{@best_matchup.name.titleize}
-  - else
-    No wins yet.
+.column
+  = image_tag("character-icons/#{@character.name}.png", :class => "portrait")
+.column
+  .box
+    %h2 Statistics
+    %table.stats
+      %tr
+        %th Win Rate:
+        - if @character.games.count > 0
+          %td= (@character.wins.count * 100.0 / @character.games.count).to_i
+        - else
+          %td No games played.
+      %tr
+        %th Best Matchup
+        - if @character.wins.count > 0
+          %td= @best_matchup.name.titleize
+        - else
+          %td No wins yet.

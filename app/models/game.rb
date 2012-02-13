@@ -14,12 +14,8 @@ class Game < ActiveRecord::Base
   attr_accessor :winner
   
   after_create do
-#    if self.creator
-      Play.create(:player => Player.find(self.creator), :game => self, :character_id => self.creator_character, :win => winner == "1")
-#    end
-#    if self.opponent
-      Play.create(:player => Player.find(self.opponent), :game => self, :character_id => self.opponent_character, :win => winner == "0")      
-#    end
+    Play.create(:player => Player.find(self.creator), :game => self, :character_id => self.creator_character, :win => winner == "1")
+    Play.create(:player => Player.find(self.opponent), :game => self, :character_id => self.opponent_character, :win => winner == "0")      
   end
   
   def self.play(cn1,cn2)
