@@ -59,6 +59,9 @@ table{
 table.stats{
   width: 100%;
 }
+table.stats td {
+  width: 50%;
+}
 table.characters td {
   border: 1px solid black;
   
