@@ -1,9 +1,19 @@
 !!!
 %html
   %head
-    %title Battlecon
+    %title Battlecon - #{active_league.name}
     = stylesheet_link_tag    "application", :media => "all"
     = javascript_include_tag "application"
     = csrf_meta_tags
   %body
-    = yield
+    .header
+      .content
+        = yield :header
+    .nav
+      .content
+        = link_to "Matchups", dashboard_path
+        = link_to "Rankings", rankings_path
+        = link_to "Profile", active_player
+        = link_to "Record Play", new_game_path
+    .content    
+      = yield

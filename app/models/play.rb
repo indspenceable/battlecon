@@ -6,5 +6,7 @@ class Play < ActiveRecord::Base
   belongs_to :game
   validate :game_id, :presence => true
   
-  belongs_to :league, :through => :game
+  validate :win, :null => false
+  
+  has_one :league, :through => :game
 end

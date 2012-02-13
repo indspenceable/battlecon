@@ -1,11 +1,25 @@
-%h1 Welcome to #{active_league.name}!
+= content_for :header do
+  %h1 Welcome to #{active_league.name}!
 
 %h2 Players
 %ul
   - active_league.players.each do |p|
-    %li= p.name
+    %li= link_to p.name.titleize, p
 
 %h2 Games
-%ul
-  - active_league.games.each do |g|
-    %li Game!
+%table
+  %tr
+    %th
+    - Character.all.each do |c|
+      %th= link_to image_tag("battlecon/#{c.name.downcase}.png", :class => 'thumbnail'), c
+  - Character.all.each do |c1|
+    %tr
+      %th= link_to image_tag("battlecon/#{c1.name.downcase}.png", :class => 'thumbnail'), c1
+      -Character.all.each do |c2|
+        %td{:style => "background-color: #{wins_color(c1,c2)}"}
+          .total-matches= c1.games_against(c2).size
+          .win-loss= win_loss(c1,c2)
+  %tr
+    %th
+    - Character.all.each do |c|
+      %th= link_to image_tag("battlecon/#{c.name.downcase}.png", :class => 'thumbnail'), c

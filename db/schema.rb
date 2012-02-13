@@ -39,10 +39,10 @@ ActiveRecord::Schema.define(:version => 20120211201711) do
   end
 
   create_table "plays", :force => true do |t|
-    t.integer  "player_id"
-    t.integer  "character_id"
-    t.integer  "game_id"
-    t.boolean  "win"
+    t.integer  "player_id",    :null => false
+    t.integer  "character_id", :null => false
+    t.integer  "game_id",      :null => false
+    t.boolean  "win",          :null => false
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
   end

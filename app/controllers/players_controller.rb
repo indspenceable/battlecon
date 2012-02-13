@@ -10,4 +10,10 @@ class PlayersController < ApplicationController
       render :text => "Did not create player."
     end
   end
+  
+  before_filter :require_login!, :only => :show
+  
+  def show
+    @player = Player.find(params[:id])
+  end
 end

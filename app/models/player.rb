@@ -5,4 +5,11 @@ class Player < ActiveRecord::Base
   belongs_to :league
   validate :league_id, :presence => true
   
+  def wins
+    plays.where(:win => true)
+  end
+  def losses
+    plays.where(:win => false)
+  end
+  
 end

@@ -1,0 +1,11 @@
+= content_for :header do
+  %h1 Record Match
+= form_for @game do |f|
+  = f.text_field(:creator_name, :disabled => true)
+  = f.hidden_field(:creator)
+  = f.collection_select(:creator_character, Character.all, :id, :name)
+  VS.
+  = f.collection_select(:opponent, @opponents, :id, :name)
+  = f.collection_select(:opponent_character, Character.all, :id, :name)
+  I won #{f.check_box(:winner)}
+  = f.submit
