@@ -55,5 +55,8 @@ module Battlecon
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+    
+    # Silence activerecord
+    config.active_record.logger = nil
   end
 end
