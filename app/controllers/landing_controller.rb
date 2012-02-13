@@ -5,7 +5,7 @@ class LandingController < ApplicationController
   end
   
   def process_login
-    session[:player_id] = Player.find_by_name(params[:name]).id
+    session[:player_id] = Player.find_by_name(params[:name].downcase).id
     redirect_to dashboard_path
   end
   

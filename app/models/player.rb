@@ -5,6 +5,10 @@ class Player < ActiveRecord::Base
   belongs_to :league
   validate :league_id, :presence => true
   
+  before_save do
+    self.name = self.name.downcase
+  end
+  
   def wins
     plays.where(:win => true)
   end
