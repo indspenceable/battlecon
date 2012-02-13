@@ -21,3 +21,9 @@
           %td= @best_matchup.name.titleize
         - else
           %td No wins yet.
+      %tr
+        %th Strategy Guide
+        - if @character.link
+          %td= link_to "Strategy Guide", @character.link
+        - else
+          %td N/A
