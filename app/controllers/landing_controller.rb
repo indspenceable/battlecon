@@ -5,4 +5,8 @@ class LandingController < ApplicationController
     @player = Player.new
   end
   
+  def logout
+    session[:player] = nil
+    redirect_to login_path
+  end
 end

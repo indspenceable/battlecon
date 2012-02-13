@@ -1,6 +1,7 @@
 Battlecon::Application.routes.draw do
   
   root :to => 'landing#index', :as => :login
+  match 'logout', :as => :logout
   resources :players
   resources :characters do
     get '/:id/:id2' => 'characters#versus'

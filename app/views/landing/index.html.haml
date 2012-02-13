@@ -1,4 +1,5 @@
-%h1 Welcome to Battlecon!
+= content_for :header do
+  %h1 Welcome to Battlecon!
 = form_for @player do |f|
   = f.label :name
   = f.text_field :name
