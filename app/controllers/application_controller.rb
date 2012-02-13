@@ -15,4 +15,8 @@ class ApplicationController < ActionController::Base
   def require_login!
     redirect_to login_path unless active_player
   end
+  
+  def logout!
+    session[:player_id] = nil
+  end
 end

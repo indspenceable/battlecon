@@ -19,11 +19,15 @@ ActiveRecord::Schema.define(:version => 20120211201711) do
     t.datetime "updated_at", :null => false
   end
 
+  add_index "characters", ["name"], :name => "index_on_character_name", :unique => true
+
   create_table "games", :force => true do |t|
     t.integer  "league_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  add_index "games", ["league_id"], :name => "index_on_game_league_id"
 
   create_table "leagues", :force => true do |t|
     t.string   "name"
@@ -31,12 +35,16 @@ ActiveRecord::Schema.define(:version => 20120211201711) do
     t.datetime "updated_at", :null => false
   end
 
+  add_index "leagues", ["name"], :name => "index_on_league_name"
+
   create_table "players", :force => true do |t|
-    t.string   "name"
+    t.string   "name",       :null => false
     t.integer  "league_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  add_index "players", ["name"], :name => "index_on_player_name", :unique => true
 
   create_table "plays", :force => true do |t|
     t.integer  "player_id",    :null => false
@@ -46,5 +54,11 @@ ActiveRecord::Schema.define(:version => 20120211201711) do
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
   end
+
+  add_index "plays", ["character_id", "game_id", "win"], :name => "index_on_play_character_id_game_id_and_wins"
+  add_index "plays", ["character_id", "game_id"], :name => "index_on_play_character_id_and_game_id", :unique => true
+  add_index "plays", ["character_id", "win"], :name => "index_on_play_character_id_and_wins"
+  add_index "plays", ["game_id"], :name => "index_on_play_game_id"
+  add_index "plays", ["player_id", "win"], :name => "index_on_play_player_id"
 
 end

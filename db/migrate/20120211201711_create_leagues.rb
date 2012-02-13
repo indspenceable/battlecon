@@ -5,5 +5,7 @@ class CreateLeagues < ActiveRecord::Migration
 
       t.timestamps
     end
+    
+    add_index :leagues, :name, :name => "index_on_league_name"
   end
 end

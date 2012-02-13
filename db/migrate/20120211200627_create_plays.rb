@@ -9,5 +9,11 @@ class CreatePlays < ActiveRecord::Migration
 
       t.timestamps
     end
+    
+    add_index :plays, [:character_id,:win], :name => "index_on_play_character_id_and_wins"
+    add_index :plays, [:character_id,:game_id], :unique => true, :name => "index_on_play_character_id_and_game_id"
+    add_index :plays, [:character_id,:game_id,:win], :name => "index_on_play_character_id_game_id_and_wins"
+    add_index :plays, [:player_id,:win], :name => "index_on_play_player_id"
+    add_index :plays, :game_id, :name => "index_on_play_game_id"    
   end
 end

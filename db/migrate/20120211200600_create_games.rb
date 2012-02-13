@@ -5,5 +5,7 @@ class CreateGames < ActiveRecord::Migration
 
       t.timestamps
     end
+    
+    add_index :games, :league_id, :name => "index_on_game_league_id"
   end
 end

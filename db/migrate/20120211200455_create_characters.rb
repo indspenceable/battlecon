@@ -5,5 +5,7 @@ class CreateCharacters < ActiveRecord::Migration
 
       t.timestamps
     end
+    
+    add_index :characters, :name, :unique => true, :name => "index_on_character_name"
   end
 end
