@@ -27,6 +27,12 @@
           %td= link_to "Strategy Guide", @character.link
         - else
           %td N/A
+  - if @character.games.count > 0
+    .box
+      %h2 Recent Games
+      %ul
+        - @character.games.order('created_at DESC').limit(10).each do |game|
+          %li= game_link @character, game
   / .box
   /   %h2 Character Information
   /   - if @character.cards.empty?
