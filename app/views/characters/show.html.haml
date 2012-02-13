@@ -27,3 +27,9 @@
           %td= link_to "Strategy Guide", @character.link
         - else
           %td N/A
+  / .box
+  /   %h2 Character Information
+  /   - if @character.cards.empty?
+  /     We are very sorry - information for this character is coming soon.
+  /   - else
+  /     %table.cards

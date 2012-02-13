@@ -18,6 +18,13 @@
 }
 body {
   background-color: #cceeff;
+  font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
+  font-weight: 200;
+}
+
+h1,h2,h3 {
+  font-family: ‘Palatino Linotype’, ‘Book Antiqua’, Palatino, serif;
+  font-weight: bold;
 }
 
 .content{
@@ -27,6 +34,9 @@ body {
 .column{
   width: 480px;
   float: left;
+}
+.centered {
+  text-align: center;
 }
 
 .nav {
@@ -68,15 +78,18 @@ table.characters td {
   margin: 0px;
   text-align: center;
 }
-td .total-matches {
+
+/* Hover tricks. */
+
+td .no-hover {
   display: block;
 }
-td:hover .total-matches {
+td:hover .no-hover {
   display: none;
 }
-td .win-loss {
+td .hover {
   display:none;
 }
-td:hover .win-loss {
+td:hover .hover{
   display: block;
 }

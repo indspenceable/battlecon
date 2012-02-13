@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   end
   helper_method :active_league
   def active_league
-    active_player.league
+    active_player.league rescue League.first
   end
   
   def require_login!

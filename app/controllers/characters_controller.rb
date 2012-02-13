@@ -1,7 +1,4 @@
-class CharactersController < ApplicationController
-  
-  before_filter :require_login!
-  
+class CharactersController < ApplicationController  
   def show
     @character = Character.find(params[:id])
     others = Character.where('id != ?', params[:id])

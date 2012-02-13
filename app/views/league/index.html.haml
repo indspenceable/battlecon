@@ -17,8 +17,8 @@
       %th= link_to image_tag("character-icons/#{c1.name.downcase}.png", :class => 'thumbnail'), c1
       -Character.all.each do |c2|
         %td{:style => "background-color: #{wins_color(c1,c2)}"}
-          .total-matches= c1.games_against(c2).size
-          .win-loss= win_loss(c1,c2)
+          .total-matches.no-hover= c1.games_against(c2).size
+          .win-loss.hover= win_loss(c1,c2)
   %tr
     %th
     - Character.all.each do |c|

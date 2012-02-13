@@ -1,12 +1,14 @@
 = content_for :header do
   %h1 Welcome to Battlecon!
-.left-column
-  %h2 Login
-  = form_tag do |f|
-    = label_tag :name
-    = text_field_tag :name
-.right-column
-  %h2 Register
-  = form_for @player do |f|
-    = f.label :name
-    = f.text_field :name
+.column
+  .box.centered
+    %h2 Login
+    = form_tag do |f|
+      = label_tag :name
+      = text_field_tag :name
+.column
+  .box.centered
+    %h2 Register
+    = form_for(@player) do |f|
+      = f.label :name
+      = f.text_field :name
