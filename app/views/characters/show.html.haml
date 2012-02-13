@@ -2,7 +2,7 @@
   %h1= @character.name.titleize
 %table.characters
   - Character.all.each do |c|
-    = link_to image_tag("battlecon/#{c.name.downcase}.png", :class => 'thumbnail'), c
+    = link_to image_tag("character-icons/#{c.name.downcase}.png", :class => 'thumbnail'), c
 %h2 
   - if @character.games.count > 0
     Win Rate: #{(@character.wins.count * 100.0 / @character.games.count).to_i}%

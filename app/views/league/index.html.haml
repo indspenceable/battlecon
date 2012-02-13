@@ -11,10 +11,10 @@
   %tr
     %th
     - Character.all.each do |c|
-      %th= link_to image_tag("battlecon/#{c.name.downcase}.png", :class => 'thumbnail'), c
+      %th= link_to image_tag("character-icons/#{c.name.downcase}.png", :class => 'thumbnail'), c
   - Character.all.each do |c1|
     %tr
-      %th= link_to image_tag("battlecon/#{c1.name.downcase}.png", :class => 'thumbnail'), c1
+      %th= link_to image_tag("character-icons/#{c1.name.downcase}.png", :class => 'thumbnail'), c1
       -Character.all.each do |c2|
         %td{:style => "background-color: #{wins_color(c1,c2)}"}
           .total-matches= c1.games_against(c2).size
@@ -22,4 +22,4 @@
   %tr
     %th
     - Character.all.each do |c|
-      %th= link_to image_tag("battlecon/#{c.name.downcase}.png", :class => 'thumbnail'), c
+      %th= link_to image_tag("character-icons/#{c.name.downcase}.png", :class => 'thumbnail'), c
