@@ -7,7 +7,8 @@ class CharactersController < ApplicationController
       @character.win_percent(:vs => memo) > @character.win_percent(:vs => char) ? memo : char
     end
   end
-  def matchup
-    @character = Character.find(params[:id])
+  def versus
+    @character = Character.find(params[:character_id])
+    @opponent = Character.find(params[:vs])
   end
 end

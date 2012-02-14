@@ -6,7 +6,7 @@ Battlecon::Application.routes.draw do
   
   resources :players
   resources :characters do
-    get '/:id/:id2' => 'characters#versus'
+    get '/:vs/' => 'characters#versus', :as => :versus
   end
   resources :games
   

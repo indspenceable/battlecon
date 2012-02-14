@@ -6,6 +6,8 @@ class Game < ActiveRecord::Base
   belongs_to :league
   validate :league_id, :presence => true
   
+  scope :recent, order('created_at DESC').limit(10)
+  
   attr_accessor :creator_name # ignored
   attr_accessor :creator
   attr_accessor :creator_character

@@ -31,7 +31,7 @@
     .box
       %h2 Recent Games
       %ul
-        - @character.games.order('created_at DESC').limit(10).each do |game|
+        - @character.games.recent.each do |game|
           %li= game_link @character, game
   / .box
   /   %h2 Character Information
