@@ -5,3 +5,9 @@
     Win Rate: #{(@player.wins.count * 100.0 / @player.games.count).to_i}%
   - else
     No games played.
+- if @player.games.count > 0
+  .box
+    %h2 Recent Games (of #{@player.games.count} total)
+    %ul
+      - @player.games.recent.each do |game|
+        %li= game_link @player, game
