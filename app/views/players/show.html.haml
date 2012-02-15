@@ -10,4 +10,4 @@
     %h2 Recent Games (of #{@player.games.count} total)
     %ul
       - @player.games.recent.each do |game|
-        %li= game_link @player, game
+        %li= player_game_link @player, game

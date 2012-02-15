@@ -32,7 +32,7 @@
       %h2 Recent Games
       %ul
         - @character.games.recent.each do |game|
-          %li= game_link @character, game
+          %li= character_game_link @character, game
   / .box
   /   %h2 Character Information
   /   - if @character.cards.empty?
