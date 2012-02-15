@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120215061514) do
+ActiveRecord::Schema.define(:version => 20120215074258) do
 
   create_table "characters", :force => true do |t|
     t.string    "name"
@@ -30,6 +30,16 @@ ActiveRecord::Schema.define(:version => 20120215061514) do
 
   add_index "games", ["league_id"], :name => "index_on_game_league_id"
 
+  create_table "league_memberships", :force => true do |t|
+    t.integer  "player_id"
+    t.integer  "league_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "league_memberships", ["league_id", "player_id"], :name => "index_on_league_id_player_id", :unique => true
+  add_index "league_memberships", ["player_id", "league_id"], :name => "index_on_player_id_league_id", :unique => true
+
   create_table "leagues", :force => true do |t|
     t.string    "name"
     t.timestamp "created_at", :null => false
@@ -39,11 +49,11 @@ ActiveRecord::Schema.define(:version => 20120215061514) do
   add_index "leagues", ["name"], :name => "index_on_league_name"
 
   create_table "players", :force => true do |t|
-    t.string   "name",                            :null => false
-    t.integer  "league_id"
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
-    t.string   "password_digest", :default => "", :null => false
+    t.string   "name",                             :null => false
+    t.integer  "active_league_id"
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
+    t.string   "password_digest",  :default => "", :null => false
   end
 
   add_index "players", ["name"], :name => "index_on_player_name", :unique => true

@@ -2,8 +2,10 @@ class Player < ActiveRecord::Base
   has_many :plays
   has_many :games, :through => :plays
   
-  belongs_to :league
-  validate :league_id, :presence => true
+  has_many :league_memberships
+  has_many :leagues, :through => :league_memberships
+  
+  belongs_to :active_league, :class_name => "League"
   
   has_secure_password
   validates_presence_of :password, :on => :create
