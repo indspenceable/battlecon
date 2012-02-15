@@ -58,5 +58,7 @@ module Battlecon
     
     # Silence activerecord
     config.active_record.logger = nil
+    #only use applicable helpers
+    config.action_controller.include_all_helpers = false
   end
 end
