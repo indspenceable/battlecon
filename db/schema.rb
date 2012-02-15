@@ -11,17 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120213063134) do
-
-  create_table "cards", :force => true do |t|
-    t.integer  "character_id"
-    t.string   "power"
-    t.string   "range"
-    t.string   "priority"
-    t.string   "other_text"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
-  end
+ActiveRecord::Schema.define(:version => 20120215061514) do
 
   create_table "characters", :force => true do |t|
     t.string    "name"
@@ -49,10 +39,11 @@ ActiveRecord::Schema.define(:version => 20120213063134) do
   add_index "leagues", ["name"], :name => "index_on_league_name"
 
   create_table "players", :force => true do |t|
-    t.string    "name",       :null => false
-    t.integer   "league_id"
-    t.timestamp "created_at", :null => false
-    t.timestamp "updated_at", :null => false
+    t.string   "name",                            :null => false
+    t.integer  "league_id"
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
+    t.string   "password_digest", :default => "", :null => false
   end
 
   add_index "players", ["name"], :name => "index_on_player_name", :unique => true

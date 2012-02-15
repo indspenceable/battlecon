@@ -3,12 +3,25 @@
 .column
   .box.centered
     %h2 Login
-    = form_tag do |f|
+    = form_tag do
       = label_tag :name
       = text_field_tag :name
+      %br
+      = label_tag :password
+      = password_field_tag :password
+      %br
+      = submit_tag
 .column
   .box.centered
     %h2 Register
     = form_for(@player) do |f|
       = f.label :name
       = f.text_field :name
+      %br
+      = f.label :password
+      = f.text_field :password
+      %br
+      = f.label :password_confirmation
+      = f.text_field :password_confirmation
+      %br
+      = submit_tag
