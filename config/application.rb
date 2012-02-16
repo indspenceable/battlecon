@@ -57,6 +57,6 @@ module Battlecon
     config.assets.version = '1.0'
     
     # Silence activerecord
-    config.active_record.logger = nil
+    config.active_record.logger = Logger.new(nil)
   end
 end

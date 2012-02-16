@@ -19,9 +19,12 @@
       = f.text_field :name
       %br
       = f.label :password
-      = f.text_field :password
+      = f.password_field :password
       %br
       = f.label :password_confirmation
-      = f.text_field :password_confirmation
+      = f.password_field :password_confirmation
+      %br
+      = f.label :active_league_id
+      = f.text_field :active_league_id
       %br
       = submit_tag

@@ -1,8 +1,6 @@
 class PlayersController < ApplicationController
   def create
-    @player = Player.new(params[:player]) do |p|
-      p.league_id = 1
-    end
+    @player = Player.new(params[:player])
     if @player.save!
       session[:player_id] = @player.id
       redirect_to dashboard_path
