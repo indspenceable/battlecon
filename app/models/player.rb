@@ -6,9 +6,19 @@ class Player < ActiveRecord::Base
   has_many :leagues, :through => :league_memberships
   
   belongs_to :active_league, :class_name => "League"
-  validates_presence_of :active_league
+  validates :active_league, :presence => true, :unless => :new_league_name
   after_create do
-    league_memberships.create(:league => active_league)
+    leagues << active_league
+  end
+  
+  attr_accessor :new_league_name
+  before_create do
+    puts "New league name is #{new_league_name}"
+    if new_league_name && !new_league_name.empty?
+      self.active_league = League.create(:name => new_league_name)
+    else
+      false unless active_league
+    end
   end
   
   has_secure_password
