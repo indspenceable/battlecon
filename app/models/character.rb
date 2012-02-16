@@ -9,28 +9,28 @@ class Character < ActiveRecord::Base
     plays.where(:win => false)
   end
   
-  def games_against(other_character, in_league_id = nil)
+  def games_against(other_character, in_league = nil)
     if self == other_character
       games.group_by(&:id).reject{|num,game| num != 2}.map{|num,games| games.first}
     else
-      if in_league_id
-        games.where(:league_id => in_league_id) & other_character.games.where(:league_id => in_league_id)
+      if in_league
+        games.where(:league_id => in_league.id) & other_character.games.where(:league_id => in_league.id)
       else
         games & other_character.games
       end
     end
   end
   
-  def wins_against(other_character, in_league_id = nil)
-    plays_against(other_character,in_league_id).where(:win => true)
+  def wins_against(other_character, in_league = nil)
+    plays_against(other_character,in_league).where(:win => true)
   end
-  def losses_against(other_character,in_league_id = nil)
-    plays_against(other_character,in_league_id).where(:win => false)
+  def losses_against(other_character,in_league = nil)
+    plays_against(other_character,in_league).where(:win => false)
   end
   
   def win_percent(opts = {})
     vs = opts[:vs]
-    in_league = opts[:league_id]
+    in_league = opts[:league]
     if vs
       wins_against(vs,in_league).count.to_f / plays_against(vs,in_league).count
     else

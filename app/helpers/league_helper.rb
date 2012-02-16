@@ -4,10 +4,10 @@ module LeagueHelper
     @title
   end
   
-  def wins_color c1,c2
+  def wins_color c1,c2,league
     return '#FFF' if c1 == c2
-    win_list = c1.wins_against(c2)
-    total = c1.games_against(c2)
+    win_list = c1.wins_against(c2,league)
+    total = c1.games_against(c2,league)
     wins = (win_list.count + 0.0) / total.count
     return '#77c' if wins.is_a?(Float) && wins.nan?
     
@@ -20,9 +20,9 @@ module LeagueHelper
     return "##{r}#{g}#{b}"
   end
   
-  def win_loss c1,c2
-    total = c1.games_against(c2).count
-    wins = c1.wins_against(c2).count
+  def win_loss c1,c2, league=nil
+    total = c1.games_against(c2,league).count
+    wins = c1.wins_against(c2,league).count
     "#{wins} / #{total-wins}"
   end
 end

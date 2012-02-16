@@ -4,7 +4,7 @@ class Game < ActiveRecord::Base
   has_many :players, :through => :plays
   
   belongs_to :league
-  validate :league_id, :presence => true
+  validates :league, :presence => true
   
   scope :recent, order('created_at DESC').limit(10)
   
