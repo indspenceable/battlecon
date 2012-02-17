@@ -5,9 +5,12 @@
     Win Rate: #{(@player.wins.count * 100.0 / @player.games.count).to_i}%
   - else
     No games played.
+%h2
+  - if @player.games.where(:league_id => active_league_id).count > 0
+    Current League win rate: #{(@player.wins.in_league(active_league).count * 100.0 / @player.games.where(:league => active_league).count).to_i}%
 - if @player.games.count > 0
   .box
-    %h2 Recent Games (of #{@player.games.count} total)
+    %h2 Recent games in league
     %ul
-      - @player.games.recent.each do |game|
+      - @player.games.where(:league_id => active_league_id).recent.each do |game|
         %li= player_game_link @player, game

@@ -12,13 +12,13 @@
       %tr
         %th Win Rate:
         - if @character.games.count > 0
-          %td= (@character.wins.count * 100.0 / @character.games.count).to_i
+          %td= (@character.wins.where(:league_id => active_league.id).count * 100.0 / @character.games.where(:league_id => active_league.id).count).to_i
         - else
           %td No games played.
       %tr
         %th Best Matchup
         - if @character.wins.count > 0
-          %td= @best_matchup.name.titleize
+          %td= @character.best_matchup(:league_id => active_league.id).name.titleize
         - else
           %td No wins yet.
       %tr
@@ -31,7 +31,7 @@
     .box
       %h2 Recent Games
       %ul
-        - @character.games.recent.each do |game|
+        - @character.games.where(:league_id => active_league.id).recent.each do |game|
           %li= character_game_link @character, game
   / .box
   /   %h2 Character Information

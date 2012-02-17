@@ -9,4 +9,5 @@ class Play < ActiveRecord::Base
   validate :win, :null => false
   
   has_one :league, :through => :game
+  scope :in_league, ->(l){joins(:game).where(:games =>{:league_id => l.is_a?(League) ? l.id : l})}
 end
