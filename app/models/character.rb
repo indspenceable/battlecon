@@ -38,6 +38,13 @@ class Character < ActiveRecord::Base
     end
   end
   
+  def best_matchup league=nil
+    Character.where('id != ?', self.id).inject do |memo, char|
+      next memo if self.win_percent(:vs => char, :league => league).nan?
+      self.win_percent(:vs => memo, :league => league) > self.win_percent(:vs => char, :league => league) ? memo : char
+    end
+  end
+  
   private
   def plays_against o, in_league=nil
     plays.where(:game_id => games_against(o, in_league))

@@ -11,9 +11,9 @@
         = yield :header
     .nav
       .content
-        = link_to "Matchups", dashboard_path
-        = link_to "Rankings", rankings_path
         - if active_player
+          = link_to "Matchups", dashboard_path
+          = link_to "Rankings", rankings_path
           = link_to "Profile", active_player
           = link_to "Record Play", new_game_path
           = link_to "Logout", logout_path
