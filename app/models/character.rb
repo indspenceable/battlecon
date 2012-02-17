@@ -1,45 +1,26 @@
 class Character < ActiveRecord::Base
-  has_many :plays
-  has_many :games, :through => :plays
-  
-  def wins
-    plays.where(:win => true)
-  end
-  def losses
-    plays.where(:win => false)
+  has_many :wins, :class_name => "Match", :foreign_key => :winning_character_id
+  has_many :losses, :class_name => "Match", :foreign_key => :losing_character_id
+  def matches
+    Match.where('winning_character_id = ? OR losing_character_id = ?', self.id, self.id)
   end
   
-  def games_against(other_character, in_league_id = nil)
-    if self == other_character
-      games.group_by(&:id).reject{|num,game| num != 2}.map{|num,games| games.first}
+  def matches_against(other_character)
+    if other_character == self
+      Match.where(:winning_character_id => self.id, :losing_character_id => self.id)
     else
-      if in_league_id
-        games.where(:league_id => in_league_id) & other_character.games.where(:league_id => in_league_id)
-      else
-        games & other_character.games
-      end
+      matches.where('winning_character_id = ? OR losing_character_id = ?', other_character.id, other_character.id)
     end
   end
   
-  def wins_against(other_character, in_league_id = nil)
-    plays_against(other_character,in_league_id).where(:win => true)
-  end
-  def losses_against(other_character,in_league_id = nil)
-    plays_against(other_character,in_league_id).where(:win => false)
-  end
-  
-  def win_percent(opts = {})
-    vs = opts[:vs]
-    in_league = opts[:league_id]
-    if vs
-      wins_against(vs,in_league).count.to_f / plays_against(vs,in_league).count
-    else
-      wins.count / games.count rescue 0
+  def best_matchup league
+    return Character.where('id != ?',id).inject do |memo, char|
+      next memo if win_percent(char,league).nan?
+      win_percent(memo, league) > win_percent(char,league) ? memo : char
     end
   end
   
-  private
-  def plays_against o, in_league=nil
-    plays.where(:game_id => games_against(o, in_league))
+  def win_percent c, league
+    (wins.where(:losing_character_id => c.id).where(:league_id => league.id).count + 0.0) / matches_against(c).where(:league_id => league.id).count
   end
 end

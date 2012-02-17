@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120215074258) do
+ActiveRecord::Schema.define(:version => 20120217081113) do
 
   create_table "characters", :force => true do |t|
     t.string    "name"
@@ -21,14 +21,6 @@ ActiveRecord::Schema.define(:version => 20120215074258) do
   end
 
   add_index "characters", ["name"], :name => "index_on_character_name", :unique => true
-
-  create_table "games", :force => true do |t|
-    t.integer   "league_id"
-    t.timestamp "created_at", :null => false
-    t.timestamp "updated_at", :null => false
-  end
-
-  add_index "games", ["league_id"], :name => "index_on_game_league_id"
 
   create_table "league_memberships", :force => true do |t|
     t.integer  "player_id"
@@ -48,6 +40,22 @@ ActiveRecord::Schema.define(:version => 20120215074258) do
 
   add_index "leagues", ["name"], :name => "index_on_league_name"
 
+  create_table "matches", :force => true do |t|
+    t.integer  "winning_player_id"
+    t.integer  "losing_player_id"
+    t.integer  "winning_character_id"
+    t.integer  "losing_character_id"
+    t.integer  "league_id"
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
+  end
+
+  add_index "matches", ["league_id"], :name => "index_matches_on_league_id"
+  add_index "matches", ["losing_character_id"], :name => "index_matches_on_losing_character_id"
+  add_index "matches", ["losing_player_id"], :name => "index_matches_on_losing_player_id"
+  add_index "matches", ["winning_character_id"], :name => "index_matches_on_winning_character_id"
+  add_index "matches", ["winning_player_id"], :name => "index_matches_on_winning_player_id"
+
   create_table "players", :force => true do |t|
     t.string   "name",                             :null => false
     t.integer  "active_league_id"
@@ -57,20 +65,5 @@ ActiveRecord::Schema.define(:version => 20120215074258) do
   end
 
   add_index "players", ["name"], :name => "index_on_player_name", :unique => true
-
-  create_table "plays", :force => true do |t|
-    t.integer   "player_id",    :null => false
-    t.integer   "character_id", :null => false
-    t.integer   "game_id",      :null => false
-    t.boolean   "win",          :null => false
-    t.timestamp "created_at",   :null => false
-    t.timestamp "updated_at",   :null => false
-  end
-
-  add_index "plays", ["character_id", "game_id", "win"], :name => "index_on_play_character_id_game_id_and_wins"
-  add_index "plays", ["character_id", "game_id"], :name => "index_on_play_character_id_and_game_id", :unique => true
-  add_index "plays", ["character_id", "win"], :name => "index_on_play_character_id_and_wins"
-  add_index "plays", ["game_id"], :name => "index_on_play_game_id"
-  add_index "plays", ["player_id", "win"], :name => "index_on_play_player_id"
 
 end

@@ -2,12 +2,12 @@
   %h1= @player.name.titleize
 %h2 
   - if @player.games.count > 0
-    Win Rate: #{(@player.wins.count * 100.0 / @player.games.count).to_i}%
+    Win Rate: #{(@player.wins.count * 100.0 / @player.matches.count).to_i}%
   - else
     No games played.
-- if @player.games.count > 0
+- if @player.matches.count > 0
   .box
-    %h2 Recent Games (of #{@player.games.count} total)
+    %h2 Recent Games (of #{@player.matches.count} total)
     %ul
-      - @player.games.recent.each do |game|
-        %li= player_game_link @player, game
+      - @player.matches.recent.each do |match|
+        %li= player_match_link @player, match
