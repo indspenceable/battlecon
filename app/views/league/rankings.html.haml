@@ -1,3 +1,5 @@
 = content_for :header do
   %h1 Welcome to #{active_league.name}!
-%h2 Coming soon...
+%ul
+  - @ranked_players.each do |p,ranking|
+    %li= link_to "#{p.name.titleize} (#{ranking})", p

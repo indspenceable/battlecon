@@ -11,7 +11,9 @@ class LeagueController < ApplicationController
       memo.wins.count > char.wins.count ? memo : char
     end
     
-    
+    @ranked_players = EloRatings.players_by_rating.map do |i,r|
+      [Player.find(i),r.rating]
+    end
   end
   
 end
