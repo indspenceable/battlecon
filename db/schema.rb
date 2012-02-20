@@ -23,10 +23,10 @@ ActiveRecord::Schema.define(:version => 20120217081113) do
   add_index "characters", ["name"], :name => "index_on_character_name", :unique => true
 
   create_table "league_memberships", :force => true do |t|
-    t.integer  "player_id"
-    t.integer  "league_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.integer   "player_id"
+    t.integer   "league_id"
+    t.timestamp "created_at", :null => false
+    t.timestamp "updated_at", :null => false
   end
 
   add_index "league_memberships", ["league_id", "player_id"], :name => "index_on_league_id_player_id", :unique => true
@@ -57,11 +57,11 @@ ActiveRecord::Schema.define(:version => 20120217081113) do
   add_index "matches", ["winning_player_id"], :name => "index_matches_on_winning_player_id"
 
   create_table "players", :force => true do |t|
-    t.string   "name",                             :null => false
-    t.integer  "active_league_id"
-    t.datetime "created_at",                       :null => false
-    t.datetime "updated_at",                       :null => false
-    t.string   "password_digest",  :default => "", :null => false
+    t.string    "name",                             :null => false
+    t.integer   "active_league_id"
+    t.timestamp "created_at",                       :null => false
+    t.timestamp "updated_at",                       :null => false
+    t.string    "password_digest",  :default => "", :null => false
   end
 
   add_index "players", ["name"], :name => "index_on_player_name", :unique => true
