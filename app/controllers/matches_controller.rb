@@ -1,13 +1,13 @@
-class GamesController < ApplicationController
+class MatchesController < ApplicationController
   before_filter :require_login!
   def new
-    @game = Game.new(:creator => active_player.id, :creator_name => active_player.name)
+    @match = Match.new(:creator => active_player.id, :creator_name => active_player.name, :league_id => active_league.id)
     @opponents = active_league.players - [active_player]
   end
   def create
-    @game = Game.new(params[:game])
+    @match = Match.new(params[:match])
     @opponents = active_league.players - [active_player]
-    if @game.save
+    if @match.save
       redirect_to dashboard_path, :flash => {:notice => "Match successfuly recorded."}
     else
       render :new

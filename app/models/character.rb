@@ -4,6 +4,12 @@ class Character < ActiveRecord::Base
   def matches
     Match.where('winning_character_id = ? OR losing_character_id = ?', self.id, self.id)
   end
+  def won? match
+    match.winning_character_id == self.id
+  end
+  def lost? match
+    match.losing_character_id == self.id
+  end
   
   def matches_against(other_character)
     if other_character == self

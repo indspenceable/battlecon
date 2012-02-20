@@ -22,7 +22,7 @@ module LeagueHelper
   
   def win_loss c1,c2
     total = c1.matches_against(c2).where(:league_id => active_league.id).count
-    wins = c1.wins.where(:losing_character_id => c2.id).count
-    "#{wins} / #{total-wins}"
+    wins = c1.wins.where(:losing_character_id => c2.id, :league_id => active_league.id).count
+    "#{wins} / #{total - wins}"
   end
 end

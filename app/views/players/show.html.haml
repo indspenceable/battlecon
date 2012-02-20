@@ -1,7 +1,7 @@
 = content_for :header do
   %h1= @player.name.titleize
 %h2 
-  - if @player.games.count > 0
+  - if @player.matches.count > 0
     Win Rate: #{(@player.wins.count * 100.0 / @player.matches.count).to_i}%
   - else
     No games played.

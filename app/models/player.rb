@@ -4,6 +4,12 @@ class Player < ActiveRecord::Base
   def matches
     Match.where('winning_player_id = ? OR losing_player_id = ?', self.id, self.id)
   end
+  def won? match
+    match.winning_player_id == self.id
+  end
+  def lost? match
+    match.losing_player_id == self.id
+  end
   
   has_many :league_memberships
   has_many :leagues, :through => :league_memberships
