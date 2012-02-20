@@ -1,16 +1,13 @@
 = content_for :header do
   %h1= @player.name.titleize
 %h2 
-  - if @player.games.count > 0
-    Win Rate: #{(@player.wins.count * 100.0 / @player.games.count).to_i}%
+  - if @player.matches.count > 0
+    Win Rate: #{(@player.wins.count * 100.0 / @player.matches.count).to_i}%
   - else
     No games played.
-%h2
-  - if @player.games.where(:league_id => active_league.id).count > 0
-    Current League win rate: #{(@player.wins.in_league(active_league).count * 100.0 / @player.games.where(:league_id => active_league.id).count).to_i}%
-- if @player.games.count > 0
+- if @player.matches.count > 0
   .box
-    %h2 Recent games in league
+    %h2 Recent Games (of #{@player.matches.count} total)
     %ul
-      - @player.games.where(:league_id => active_league.id).recent.each do |game|
-        %li= player_game_link @player, game
+      - @player.matches.recent.each do |match|
+        %li= player_match_link @player, match

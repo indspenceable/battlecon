@@ -11,10 +11,10 @@
     %table.stats
       %tr
         %th Win Rate:
-        - if @character.games.count > 0
-          %td= (@character.wins.in_league(active_league).count * 100.0 / @character.games.where(:league_id => active_league.id).count).to_i
+        - if @character.matches.count > 0
+          %td= (@character.wins.where(:league_id => active_league.id).count * 100.0 / @character.matches.where(:league_id => active_league.id).count).to_i
         - else
-          %td No games played.
+          %td No matches played.
       %tr
         %th Best Matchup:
         - if @character.wins.count > 0
@@ -27,15 +27,9 @@
           %td= link_to "Strategy Guide", @character.link
         - else
           %td N/A
-  - if @character.games.count > 0
+  - if @character.matches.count > 0
     .box
-      %h2 Recent Games
+      %h2 Recent Matches
       %ul
-        - @character.games.where(:league_id => active_league.id).recent.each do |game|
-          %li= character_game_link @character, game
-  / .box
-  /   %h2 Character Information
-  /   - if @character.cards.empty?
-  /     We are very sorry - information for this character is coming soon.
-  /   - else
-  /     %table.cards
+        - @character.matches.where(:league_id => active_league.id).recent.each do |match|
+          %li= character_match_link @character, match

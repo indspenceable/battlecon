@@ -1,6 +1,15 @@
 class Player < ActiveRecord::Base
-  has_many :plays
-  has_many :games, :through => :plays
+  has_many :wins, :class_name => "Match", :foreign_key => :winning_player_id
+  has_many :losses, :class_name => "Match", :foreign_key => :losing_player_id
+  def matches
+    Match.where('winning_player_id = ? OR losing_player_id = ?', self.id, self.id)
+  end
+  def won? match
+    match.winning_player_id == self.id
+  end
+  def lost? match
+    match.losing_player_id == self.id
+  end
   
   has_many :league_memberships
   has_many :leagues, :through => :league_memberships
@@ -29,12 +38,4 @@ class Player < ActiveRecord::Base
     self.name = self.name.downcase
     puts "password is ", self.password, " digest is ", self.password_digest
   end
-  
-  def wins
-    plays.where(:win => true)
-  end
-  def losses
-    plays.where(:win => false)
-  end
-  
 end
