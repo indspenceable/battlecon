@@ -13,6 +13,16 @@
 
 ActiveRecord::Schema.define(:version => 20120217081113) do
 
+  create_table "cards", :force => true do |t|
+    t.integer   "character_id"
+    t.string    "power"
+    t.string    "range"
+    t.string    "priority"
+    t.string    "other_text"
+    t.timestamp "created_at",   :null => false
+    t.timestamp "updated_at",   :null => false
+  end
+
   create_table "characters", :force => true do |t|
     t.string    "name"
     t.timestamp "created_at", :null => false
