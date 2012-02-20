@@ -1,3 +1,5 @@
+require 'ratings'
+
 class Player < ActiveRecord::Base
   has_many :wins, :class_name => "Match", :foreign_key => :winning_player_id
   has_many :losses, :class_name => "Match", :foreign_key => :losing_player_id
@@ -9,6 +11,10 @@ class Player < ActiveRecord::Base
   end
   def lost? match
     match.losing_player_id == self.id
+  end
+  
+  def rating
+    EloRatings.get_elo_player(self.id).rating
   end
   
   has_many :league_memberships
