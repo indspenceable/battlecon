@@ -13,6 +13,8 @@ class LeagueController < ApplicationController
     
     @ranked_players = EloRatings.players_by_rating.map do |i,r|
       [Player.find(i),r.rating]
+    end.reject do |p|
+      p.league != active_league
     end
   end
   
