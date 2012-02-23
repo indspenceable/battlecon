@@ -1,0 +1,14 @@
+-# assmes a parameter, post
+= form_for post do |f|
+  - if post.primary_character_id
+    = f.hidden_field(:primary_character_id)
+  - else
+    = f.label :primary_character
+    = f.collection_select(:primary_character, Character.all, :id, :name)
+  - if post.secondary_character_id
+    = f.hidden_field(:secondary_character_id)
+  = f.hidden_field(:creator_id)
+  = f.label :title
+  = f.text_field :title
+  = f.text_area :text
+  = f.submit

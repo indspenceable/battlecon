@@ -55,3 +55,6 @@
             = link_to s.title, s
             by
             = link_to s.creator.name.titleize, s.creator
+  .box
+    %h2 Write Strategy
+    = render :partial => 'strategy_posts/form', :locals => {:post => @post}
