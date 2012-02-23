@@ -6,7 +6,7 @@ class MatchesController < ApplicationController
   end
   def create
     @match = Match.new(params[:match]) do |m|
-      m.league = active_league
+      m.active_league = active_league
     end
     @opponents = active_league.players - [active_player]
     if @match.save
