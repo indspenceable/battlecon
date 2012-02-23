@@ -1,5 +1,5 @@
 class LeagueController < ApplicationController
-  before_each do
+  before_filter do
     session[:active_league_id] = params[:league_id] if params[:league_id]
   end
   
