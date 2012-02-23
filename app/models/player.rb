@@ -26,6 +26,8 @@ class Player < ActiveRecord::Base
     leagues << active_league
   end
   
+  has_many :strategy_posts, :foreign_key => "creator_id"
+  
   attr_accessor :new_league_name
   before_create do
     puts "New league name is #{new_league_name}"

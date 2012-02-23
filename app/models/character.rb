@@ -1,6 +1,21 @@
 class Character < ActiveRecord::Base
   has_many :wins, :class_name => "Match", :foreign_key => :winning_character_id
   has_many :losses, :class_name => "Match", :foreign_key => :losing_character_id
+  
+  def strategies
+    StrategyPost.where('primary_character_id = ? OR secondary_character_id = ?', self.id, self.id)
+  end
+  def solo_strategies
+    strategies.where(:secondary_character_id => nil)
+  end
+  def matchup_strategies(other)
+    if other == self
+      StrategyPost.where('primary_character_id = ? AND secondary_character_id = ?', self.id, self.id)
+    else
+      strategies.where('primary_character_id = ? OR secondary_character_id = ?', other.id, other.id)
+    end
+  end
+  
   def matches
     Match.where('winning_character_id = ? OR losing_character_id = ?', self.id, self.id)
   end

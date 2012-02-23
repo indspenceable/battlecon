@@ -9,6 +9,7 @@ Battlecon::Application.routes.draw do
     get '/:vs/' => 'characters#versus', :as => :versus, :on => :member
   end
   resources :matches
+  resources :strategy_posts
   
   match 'league(/:id)' => 'league#index', :as => :dashboard
   match 'rankings(/:id)' => 'league#rankings', :as => :rankings

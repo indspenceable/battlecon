@@ -1,24 +1,33 @@
 = content_for :header do
-  %h1= @character.name.titleize
+  %h1= "#{@character.name.titleize} vs #{@vs.name.titleize}"
 %table.characters
   - Character.all.each do |c|
     = link_to image_tag("character-icons/#{c.name.downcase}.png", :class => 'thumbnail'), c
 .column
   = image_tag("character-icons/#{@character.name}.png", :class => "portrait")
+  = image_tag("character-icons/#{@vs.name}.png", :class => "portrait")
 .column
   .box
     %h2 Statistics
     %table.stats
       %tr
         %th Win Rate:
-        - if @character.matches.where(:league_id => active_league.id).count > 0
+        - if @character.matches.count > 0
           %td= (@character.wins.where(:league_id => active_league.id).count * 100.0 / @character.matches.where(:league_id => active_league.id).count).to_i
+        - else
+          %td No matches played.
+        - if @vs.matches.count > 0
+          %td= (@vs.wins.where(:league_id => active_league.id).count * 100.0 / @vs.matches.where(:league_id => active_league.id).count).to_i
         - else
           %td No matches played.
       %tr
         %th Best Matchup:
-        - if @character.wins.where(:league_id => active_league.id).count > 0
+        - if @character.wins.count > 0
           %td= @character.best_matchup(active_league).name.titleize
+        - else
+          %td No wins yet.
+        - if @vs.wins.count > 0
+          %td= @vs.best_matchup(active_league).name.titleize
         - else
           %td No wins yet.
       %tr
@@ -27,19 +36,22 @@
           %td= link_to "Strategy Guide", @character.link
         - else
           %td N/A
-  - if @character.matches.where(:league_id => active_league.id).any?
+        - if @vs.link
+          %td= link_to "Strategy Guide", @vs.link
+        - else
+          %td N/A
+  - if @character.matches_against(@vs).where(:league_id => active_league.id).count > 0
     .box
       %h2 Recent Matches
       %ul
-        - @character.matches.where(:league_id => active_league.id).recent.each do |match|
+        - @character.matches_against(@vs).where(:league_id => active_league.id).recent.each do |match|
           %li= character_match_link @character, match
-  - if @character.strategies.any?
+  - if @character.matchup_strategies(@vs).any?
     .box
       %h2 Strategies
       %ul
-        - @character.strategies.each do |s|
+        - @character.matchup_strategies(@vs).each do |s|
           %li
             = link_to s.title, s
             by
             = link_to s.creator.name.titleize, s.creator
-    
