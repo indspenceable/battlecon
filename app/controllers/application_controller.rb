@@ -9,8 +9,7 @@ class ApplicationController < ActionController::Base
   end
   helper_method :active_league
   def active_league
-    session[:active_league_id] ? League.find(session[:active_league_id]) : active_player.active_league
-  rescue League.first
+    session[:active_league_id] ? League.find(session[:active_league_id]) : active_player.active_league rescue League.first
   end
   
   def require_login!
