@@ -27,7 +27,7 @@
           %td= link_to "Strategy Guide", @character.link
         - else
           %td N/A
-  - if @character.matches.count > 0
+  - if @character.matches.where(:league_id => active_league.id).count > 0
     .box
       %h2 Recent Matches
       %ul

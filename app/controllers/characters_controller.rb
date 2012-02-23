@@ -3,7 +3,7 @@ class CharactersController < ApplicationController
     @character = Character.find(params[:id])
   end
   def versus
-    @character = Character.find(params[:character_id])
-    @opponent = Character.find(params[:vs])
+    @character = Character.find(params[:id])
+    @vs = Character.find(params[:vs])
   end
 end
