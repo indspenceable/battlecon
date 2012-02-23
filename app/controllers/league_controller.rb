@@ -1,4 +1,8 @@
 class LeagueController < ApplicationController
+  before_each do
+    session[:active_league_id] = params[:league_id] if params[:league_id]
+  end
+  
   def index
   end
   
