@@ -99,24 +99,18 @@ table.stats td {
   width: 50%;
 }
 table.characters td {
-  border: 1px solid black;
+  border-bottom: 1px solid black;
+  border-right: 1px solid black;
   
   margin: 0px;
   text-align: center;
   cursor: pointer;
 }
 
-/* Hover tricks. */
+table.characters td.top-row {
+  border-top: 1px solid black;
+}
+table.characters td.left-col {
+  border-left: 1px solid black;
+}
 
-td .no-hover {
-  display: block;
-}
-td:hover .no-hover {
-  display: none;
-}
-td .hover {
-  display:none;
-}
-td:hover .hover{
-  display: block;
-}
