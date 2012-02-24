@@ -1,11 +1,5 @@
 = content_for :header do
   %h1 Welcome to #{active_league.name}!
-
-%h2 Players
-%ul
-  - active_league.players.each do |p|
-    %li= link_to p.name.titleize, p
-
 %h2 Matches
 %table.characters
   %tr

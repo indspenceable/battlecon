@@ -27,6 +27,18 @@ h1,h2,h3 {
   font-weight: bold;
 }
 
+a {
+ text-decoration: none;
+ color: #139;
+}
+a:visited {
+  color: #913;
+}
+a:hover {
+ color: #68F;
+}
+
+
 .content{
   width: 960px;
   margin: auto;
