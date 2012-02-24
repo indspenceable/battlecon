@@ -16,12 +16,12 @@
       -Character.all.each do |c2|
         %a{:href => versus_character_path(c1,c2)}
           %td{:style => "background-color: #{wins_color(c1,c2)}"}
-            Hi
+
 :javascript
   $(function() {
-    // $('table.characters td').on('click', function() {
-    //       window.location = $(this).attr('path');
-    // })
+    $('table.characters td').on('click', function() {
+      window.location = $(this).attr('path');
+    })
   
     var $guide = $('.guide')
     $('.guide-anchor').waypoint(function(event, direction) {

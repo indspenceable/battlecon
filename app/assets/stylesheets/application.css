@@ -103,6 +103,7 @@ table.characters td {
   
   margin: 0px;
   text-align: center;
+  cursor: pointer;
 }
 
 /* Hover tricks. */
