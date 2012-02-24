@@ -14,8 +14,7 @@
     %tr
       %th= link_to image_tag("character-icons/#{c1.name.downcase}.png", :class => 'thumbnail'), c1
       -Character.all.each do |c2|
-        %a{:href => versus_character_path(c1,c2)}
-          %td{:style => "background-color: #{wins_color(c1,c2)}"}
+        %td{:style => "background-color: #{wins_color(c1,c2)}", :path => versus_character_path(c1,c2)} -
 
 :javascript
   $(function() {
