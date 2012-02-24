@@ -17,7 +17,7 @@
   
 }
 body {
-  background-color: #cceeff;
+  background-image: url(http://subtlepatterns.com/patterns/furley_bg.png);
   font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
   font-weight: 200;
 }
@@ -47,8 +47,9 @@ ul {
   text-align: center;
 }
 .header{
-  background-color: #7cd;
-  border-bottom: 5px solid #6bb7c6;
+  background-color: #FAFAFA;
+  border-bottom: 1px solid #CCC;
+  padding: 5px;
 }
 .characters {
 }
