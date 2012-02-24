@@ -37,6 +37,15 @@ a:visited {
 a:hover {
  color: #68F;
 }
+.guide {
+  display: none;
+  position: fixed;
+  top: 0px;
+  background-color: #eee;
+}
+.fixed {
+  background-color: #f00;
+}
 
 
 .content{

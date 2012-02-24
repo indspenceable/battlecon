@@ -1,8 +1,12 @@
 = content_for :header do
   %h1 Welcome to #{active_league.name}!
 %h2 Matches
-%table.characters
+%table.guide
   %tr
+  - ([Character.first] + Character.all).each do |c|
+    %td= link_to image_tag("character-icons/#{c.name.downcase}.png", :class => 'thumbnail'), c
+%table.characters
+  %tr.guide-anchor
     %th
     - Character.all.each do |c|
       %th= link_to image_tag("character-icons/#{c.name.downcase}.png", :class => 'thumbnail'), c
@@ -10,10 +14,23 @@
     %tr
       %th= link_to image_tag("character-icons/#{c1.name.downcase}.png", :class => 'thumbnail'), c1
       -Character.all.each do |c2|
-        %td{:style => "background-color: #{wins_color(c1,c2)}"}
-          .total-matches.no-hover= link_to c1.matches_against(c2).where(:league_id => active_league.id).size.to_s, versus_character_path(c1, c2)
-          .win-loss.hover=link_to win_loss(c1,c2), versus_character_path(c1, c2)
-  %tr
-    %th
-    - Character.all.each do |c|
-      %th= link_to image_tag("character-icons/#{c.name.downcase}.png", :class => 'thumbnail'), c
+        %a{:href => versus_character_path(c1,c2)}
+          %td{:style => "background-color: #{wins_color(c1,c2)}"}
+            Hi
+:javascript
+  $(function() {
+    // $('table.characters td').on('click', function() {
+    //       window.location = $(this).attr('path');
+    // })
+  
+    var $guide = $('.guide')
+    $('.guide-anchor').waypoint(function(event, direction) {
+      if (direction == 'down') {
+        $guide.show();
+        console.log("hello")
+      } else {
+        $guide.hide();
+        console.log("world")
+      }
+    })
+  })
