@@ -8,7 +8,8 @@
   - if post.secondary_character_id
     = f.hidden_field(:secondary_character_id)
   = f.hidden_field(:creator_id)
-  = f.label :title
-  = f.text_field :title
-  = f.text_area :text
-  = f.submit
+  %p
+    = f.label :title
+    = f.text_field :title
+  %p= f.text_area :text
+  %p= f.submit
