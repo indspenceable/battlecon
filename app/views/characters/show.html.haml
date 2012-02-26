@@ -2,9 +2,29 @@
   %h1= @character.name.titleize
 %table.characters
   - Character.all.each do |c|
-    = link_to image_tag("character-icons/#{c.name.downcase}.png", :class => 'thumbnail'), c
+    = link_to image_tag("character-icons/#{c.name.downcase}.png", :class => 'thumbnail draggable', :characterId => c.id), c
 .column
-  = image_tag("character-icons/#{@character.name}.png", :class => "portrait")
+  = image_tag("character-icons/#{@character.name}.png", :class => "portrait droppable", :id => "char-drop-one")
+  = image_tag("character-icons/blank.png", :class => "portrait droppable", :id => "char-drop-two")
+  :javascript 
+    $(function() {
+      $('.draggable').draggable({
+        zIndex: 2000, 
+        helper:"clone"
+      });
+      $('#char-drop-two').droppable({
+        drop: function( event, ui ) {
+          var characterId = $(ui.draggable.get(0)).attr('characterId');
+          window.location = '#{versus_character_path(@character.id,"'+characterId+'")}'
+        }
+      })
+      $('#char-drop-one').droppable({
+        drop: function( event, ui ) {
+          var characterId = $(ui.draggable.get(0)).attr('characterId');
+          window.location = '#{character_path("'+characterId+'")}'
+        }
+      })
+    })
 .column
   .box
     %h2 Statistics

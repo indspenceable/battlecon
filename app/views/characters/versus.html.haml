@@ -4,8 +4,8 @@
   - Character.all.each do |c|
     = link_to image_tag("character-icons/#{c.name.downcase}.png", :class => 'thumbnail draggable', :characterId => c.id), c
 .column
-  = image_tag("character-icons/#{@character.name}.png", :class => "portrait droppable", :id => "char-drop-one")
-  = image_tag("character-icons/#{@vs.name}.png", :class => "portrait droppable", :id => "char-drop-two")
+  = link_to image_tag("character-icons/#{@character.name}.png", :class => "portrait droppable", :id => "char-drop-one"), @character
+  = link_to image_tag("character-icons/#{@vs.name}.png", :class => "portrait droppable", :id => "char-drop-two"), @vs
   :javascript 
     $(function() {
       $('.draggable').draggable({
