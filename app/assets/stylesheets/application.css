@@ -46,6 +46,12 @@ a:hover {
   background-color: #eee;
 }
 
+.portrait {
+  width: 192px;
+}
+.droppable {
+  border: 3px dashed gray;
+}
 
 .content{
   width: 960px;

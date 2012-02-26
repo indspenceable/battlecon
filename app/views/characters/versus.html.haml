@@ -2,31 +2,51 @@
   %h1= "#{@character.name.titleize} vs #{@vs.name.titleize}"
 %table.characters
   - Character.all.each do |c|
-    = link_to image_tag("character-icons/#{c.name.downcase}.png", :class => 'thumbnail'), c
+    = link_to image_tag("character-icons/#{c.name.downcase}.png", :class => 'thumbnail draggable', :characterId => c.id), c
 .column
-  = image_tag("character-icons/#{@character.name}.png", :class => "portrait")
-  = image_tag("character-icons/#{@vs.name}.png", :class => "portrait")
+  = image_tag("character-icons/#{@character.name}.png", :class => "portrait droppable", :id => "char-drop-one")
+  = image_tag("character-icons/#{@vs.name}.png", :class => "portrait droppable", :id => "char-drop-two")
+  :javascript 
+    $(function() {
+      $('.draggable').draggable({
+        zIndex: 2000, 
+        helper:"clone"
+      });
+      $('#char-drop-two').droppable({
+        drop: function( event, ui ) {
+          var characterId = $(ui.draggable.get(0)).attr('characterId');
+          window.location = '#{versus_character_path(@character.id,"'+characterId+'")}'
+        }
+      })
+      $('#char-drop-one').droppable({
+        drop: function( event, ui ) {
+          var characterId = $(ui.draggable.get(0)).attr('characterId');
+          window.location = '#{versus_character_path("'+characterId+'", @vs.id)}'
+        }
+      })
+    })
+
 .column
   .box
     %h2 Statistics
     %table.stats
       %tr
         %th Win Rate:
-        - if @character.matches.count > 0
+        - if @character.matches.where(:league_id => active_league.id).count > 0
           %td= (@character.wins.where(:league_id => active_league.id).count * 100.0 / @character.matches.where(:league_id => active_league.id).count).to_i
         - else
           %td No matches played.
-        - if @vs.matches.count > 0
+        - if @vs.matches.where(:league_id => active_league.id).count > 0
           %td= (@vs.wins.where(:league_id => active_league.id).count * 100.0 / @vs.matches.where(:league_id => active_league.id).count).to_i
         - else
           %td No matches played.
       %tr
         %th Best Matchup:
-        - if @character.wins.count > 0
+        - if @character.wins.where(:league_id => active_league.id).count > 0
           %td= @character.best_matchup(active_league).name.titleize
         - else
           %td No wins yet.
-        - if @vs.wins.count > 0
+        - if @vs.wins.where(:league_id => active_league.id).count > 0
           %td= @vs.best_matchup(active_league).name.titleize
         - else
           %td No wins yet.
