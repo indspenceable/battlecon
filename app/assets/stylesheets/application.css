@@ -16,6 +16,7 @@
   margin: 0px;
   
 }
+
 body {
   background-image: url(http://subtlepatterns.com/patterns/furley_bg.png);
   font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
@@ -97,11 +98,14 @@ h2{
 table{
   border-spacing: 0px;
 }
+.clear {
+  clear: both;
+}
 table.stats{
   width: 100%;
 }
-table.stats td {
-  width: 50%;
+table.stats th.title {
+  text-align: left;
 }
 table.characters td {
   border-bottom: 1px solid black;
@@ -119,3 +123,26 @@ table.characters td.left-col {
   border-left: 1px solid black;
 }
 
+html, body {
+  height: 100%;
+}
+.wrapper {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  margin: 0 auto -20px; /* the bottom margin is the negative value of the footer's height */
+}
+.footer, .push {
+  height: 19px; /* .push must be the same height as .footer */
+}
+.footer {
+  background-color: #eee;
+  border-top: 1px solid #ccc;
+}
+
+/*
+
+Sticky Footer by Ryan Fait
+http://ryanfait.com/
+
+*/

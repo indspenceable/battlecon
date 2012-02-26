@@ -6,18 +6,23 @@
     = javascript_include_tag "application"
     = csrf_meta_tags
   %body
-    .header
+    .wrapper
+      .header
+        .content
+          = yield :header
+      .nav
+        .content
+          - if active_player
+            = link_to "Matchups", dashboard_path
+            = link_to "Rankings", rankings_path
+            = link_to "Profile", active_player
+            = link_to "Record Play", new_match_path
+            = link_to "Logout", logout_path
+          - else
+            = link_to "Login/Register", login_path
+      .content    
+        = yield
+      .push
+    .footer
       .content
-        = yield :header
-    .nav
-      .content
-        - if active_player
-          = link_to "Matchups", dashboard_path
-          = link_to "Rankings", rankings_path
-          = link_to "Profile", active_player
-          = link_to "Record Play", new_match_path
-          = link_to "Logout", logout_path
-        - else
-          = link_to "Login/Register", login_path
-    .content    
-      = yield
+        = link_to "Contact", 'mailto:daniel.patrick.spencer@gmail.com'
