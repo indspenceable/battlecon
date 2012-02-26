@@ -41,10 +41,9 @@ a:hover {
   display: none;
   position: fixed;
   top: 0px;
-  background-color: #eee;
 }
-.fixed {
-  background-color: #f00;
+.guide td {
+  background-color: #eee;
 }
 
 

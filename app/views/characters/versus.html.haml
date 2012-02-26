@@ -45,7 +45,7 @@
       %h2 Recent Matches
       %ul
         - @character.matches_against(@vs).where(:league_id => active_league.id).recent.each do |match|
-          %li= character_match_link @character, match
+          %li= character_vs_link match
   - if @character.matchup_strategies(@vs).any?
     .box
       %h2 Strategies
