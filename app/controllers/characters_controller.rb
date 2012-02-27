@@ -6,6 +6,6 @@ class CharactersController < ApplicationController
   def versus
     @character = Character.find(params[:id])
     @vs = Character.find(params[:vs])
-    @post = StrategyPost.new(:primary_character_id => @character.id, :secondary_character_id => @vs.id, :creator_id => active_player.id)
+    @post = StrategyPost.new(:primary_character_id => @character.id, :secondary_character_id => @vs.id, :creator_id => active_player.id)  if active_player
   end
 end
