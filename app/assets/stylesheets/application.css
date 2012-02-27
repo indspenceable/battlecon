@@ -129,7 +129,13 @@ label {
   width: 35%;
 }
 
+textarea {
+  width: 95%;
+}
 
+.register{
+  padding-top: 150px
+}
 html, body {
   height: 100%;
 }

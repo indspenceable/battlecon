@@ -44,4 +44,13 @@ class Character < ActiveRecord::Base
   def win_percent c, league
     (wins.where(:losing_character_id => c.id).where(:league_id => league.id).count + 0.0) / matches_against(c).where(:league_id => league.id).count
   end
+
+  def win_rate l
+    if matches.where(:league_id => l.id).any?
+      "#{(wins.where(:league_id => l.id).count * 100.0 / matches.where(:league_id => l.id).count).to_i}%"
+    else
+      "No matches played."
+    end
+  end
+
 end

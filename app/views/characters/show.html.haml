@@ -33,10 +33,7 @@
       %table.stats
         %tr
           %th Win Rate:
-          - if @character.matches.where(:league_id => active_league.id).count > 0
-            %td= (@character.wins.where(:league_id => active_league.id).count * 100.0 / @character.matches.where(:league_id => active_league.id).count).to_i
-          - else
-            %td No matches played.
+          %td= @character.win_rate(active_league)
         %tr
           %th Best Matchup:
           - if @character.wins.where(:league_id => active_league.id).count > 0
@@ -64,7 +61,7 @@
             = link_to s.title, s
             by
             = link_to s.creator.name.titleize, s.creator
-  .box
+  .box.centered
     %h2 Write Strategy
     - if active_player
       = render :partial => 'strategy_posts/form', :locals => {:post => @post}

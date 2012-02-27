@@ -1,8 +1,8 @@
 = content_for :header do
   %h1 Welcome to Battlecon!
 .column
-  =image_tag("character-icons/#{Character.find(rand(Character.count)).name.downcase}.png")
-.column
+  =character_image_tag Character.find rand(Character.count+1)
+.column.register
   .box.centered
     %h2 Login
     = form_tag do

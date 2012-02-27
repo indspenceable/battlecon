@@ -22,5 +22,6 @@ class LeagueController < ApplicationController
       p.leagues.include?(active_league)
     end
   end
+
   
 end

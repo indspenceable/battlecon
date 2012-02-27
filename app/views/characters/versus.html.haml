@@ -37,14 +37,8 @@
           %th.title= @vs.name.titleize
         %tr
           %th Win Rate:
-          - if @character.matches.where(:league_id => active_league.id).count > 0
-            %td= (@character.wins.where(:league_id => active_league.id).count * 100.0 / @character.matches.where(:league_id => active_league.id).count).to_i
-          - else
-            %td No matches played.
-          - if @vs.matches.where(:league_id => active_league.id).count > 0
-            %td= (@vs.wins.where(:league_id => active_league.id).count * 100.0 / @vs.matches.where(:league_id => active_league.id).count).to_i
-          - else
-            %td No matches played.
+          %td= @character.win_rate active_league
+          %td= @vs.win_rate active_league
         %tr
           %th Best Matchup:
           - if @character.wins.where(:league_id => active_league.id).count > 0
