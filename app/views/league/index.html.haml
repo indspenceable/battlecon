@@ -1,36 +1,45 @@
 = content_for :header do
-  %h1 Welcome to #{active_league.name}!
-%h2 Matches
-%table.guide
-  %tr
-    %td.thumbnail{:style => "background-color: transparent"}
-    - Character.all.each do |c|
-      %td= link_to image_tag("character-icons/#{c.name.downcase}.png", :class => 'thumbnail'), c
-%table.characters.bordered
-  %tr.guide-anchor
-    %th
-    - Character.all.each do |c|
-      %th= link_to image_tag("character-icons/#{c.name.downcase}.png", :class => 'thumbnail'), c
-  - Character.all.reverse.each_with_index do |c1,i1|
+  %h1 Welcome to #{active_league.name rescue "Battlecon"}!
+-if active_league
+  %h2 Matches
+  %table.guide
     %tr
-      %th= link_to image_tag("character-icons/#{c1.name.downcase}.png", :class => 'thumbnail'), c1
-      -Character.all.each_with_index do |c2, i2|
-        %td{:class => (i1 == 0 ? 'top-row ' : '') + (i2 == 0 ? 'left-col' : ''), :style => "background-color: #{wins_color(c1,c2)}", :path => versus_character_path(c1,c2)}
+      %td.thumbnail{:style => "background-color: transparent"}
+      - Character.all.each do |c|
+        %td= link_to character_image_tag(c, :class => 'thumbnail'), c
+  %table.characters.bordered
+    %tr.guide-anchor
+      %th
+      - Character.all.each do |c|
+        %th= link_to character_image_tag(c, :class => 'thumbnail'), c
+    - Character.all.reverse.each_with_index do |c1,i1|
+      %tr
+        %th= link_to character_image_tag(c1, :class => 'thumbnail'), c1
+        -Character.all.each_with_index do |c2, i2|
+          %td{:class => (i1 == 0 ? 'top-row ' : '') + (i2 == 0 ? 'left-col' : ''), :style => "background-color: #{wins_color(c1,c2)}", :path => versus_character_path(c1,c2)}
 
-:javascript
-  $(function() {
-    $('table.characters td').on('click', function() {
-      window.location = $(this).attr('path');
-    })
+  :javascript
+    $(function() {
+      $('table.characters td').on('click', function() {
+        window.location = $(this).attr('path');
+      })
   
-    var $guide = $('.guide')
-    $('.guide-anchor').waypoint(function(event, direction) {
-      if (direction == 'down') {
-        $guide.show();
-        console.log("hello")
-      } else {
-        $guide.hide();
-        console.log("world")
-      }
+      var $guide = $('.guide')
+      $('.guide-anchor').waypoint(function(event, direction) {
+        if (direction == 'down') {
+          $guide.show();
+          console.log("hello")
+        } else {
+          $guide.hide();
+          console.log("world")
+        }
+      })
     })
-  })
+- else
+  %h2 Characters
+  %table.characters.bordered
+    %tr.guide-anchor
+      %th
+      - Character.all.each do |c|
+        %th= link_to character_image_tag(c, :class => 'thumbnail'), c
+  Select a character to view their strategy articles.

@@ -5,6 +5,7 @@ class PlayersController < ApplicationController
       session[:player_id] = @player.id
       redirect_to dashboard_path
     else
+      #TODO this needs to actually tell the user ANYTHING.
       render :text => "Did not create player."
     end
   end

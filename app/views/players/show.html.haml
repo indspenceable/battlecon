@@ -1,5 +1,9 @@
 = content_for :header do
-  %h1= "#{@player.name.titleize} (#{@player.rating})"
+  %h1
+    = @player.name.titleize
+    - if @player.leagues.any? 
+      
+      = "(#{@player.rating})"
 %h2 
   - if @player.matches.count > 0
     Win Rate: #{(@player.wins.count * 100.0 / @player.matches.count).to_i}%

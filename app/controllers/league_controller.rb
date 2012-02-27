@@ -6,6 +6,7 @@ class LeagueController < ApplicationController
   def index
   end
   
+  before_filter :require_league!, :only => :rankings
   def rankings
     @most_wins_player = Player.all.inject do |memo, char|
       memo.wins.count > char.wins.count ? memo : char

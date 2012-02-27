@@ -5,8 +5,9 @@ module LeagueHelper
   end
   
   def wins_color c1,c2
-    win_list = c1.wins.where(:losing_character_id => c2.id).where(:league_id => active_league.id)
-    total = c1.matches_against(c2).where(:league_id => active_league.id)
+    return 'transparent' unless active_league
+    win_list = c1.wins.where(:losing_character_id => c2.id).where(al)
+    total = c1.matches_against(c2).where(al)
     wins = (win_list.count + 0.0) / total.count
     return 'transparent' if wins.is_a?(Float) && wins.nan?
     
@@ -33,8 +34,8 @@ module LeagueHelper
   end
   
   def win_loss c1,c2
-    total = c1.matches_against(c2).where(:league_id => active_league.id).count
-    wins = c1.wins.where(:losing_character_id => c2.id, :league_id => active_league.id).count
+    total = c1.matches_against(c2).where(al).count
+    wins = c1.wins.where(:losing_character_id => c2.id).where(al).count
     "#{wins} / #{total - wins}"
   end
 end

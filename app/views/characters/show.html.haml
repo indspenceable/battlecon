@@ -26,33 +26,35 @@
       })
     })
 .column
-  .box
-    %h2 Statistics
-    %table.stats
-      %tr
-        %th Win Rate:
-        - if @character.matches.where(:league_id => active_league.id).count > 0
-          %td= (@character.wins.where(:league_id => active_league.id).count * 100.0 / @character.matches.where(:league_id => active_league.id).count).to_i
-        - else
-          %td No matches played.
-      %tr
-        %th Best Matchup:
-        - if @character.wins.where(:league_id => active_league.id).count > 0
-          %td= @character.best_matchup(active_league).name.titleize
-        - else
-          %td No wins yet.
-      %tr
-        %th Strategy Guide:
-        - if @character.link
-          %td= link_to "Strategy Guide", @character.link
-        - else
-          %td N/A
-  - if @character.matches.where(:league_id => active_league.id).any?
+
+  - if active_league
     .box
-      %h2 Recent Matches
-      %ul
-        - @character.matches.where(:league_id => active_league.id).recent.each do |match|
-          %li= character_match_link @character, match
+      %h2 Statistics
+      %table.stats
+        %tr
+          %th Win Rate:
+          - if @character.matches.where(:league_id => active_league.id).count > 0
+            %td= (@character.wins.where(:league_id => active_league.id).count * 100.0 / @character.matches.where(:league_id => active_league.id).count).to_i
+          - else
+            %td No matches played.
+        %tr
+          %th Best Matchup:
+          - if @character.wins.where(:league_id => active_league.id).count > 0
+            %td= @character.best_matchup(active_league).name.titleize
+          - else
+            %td No wins yet.
+        %tr
+          %th Strategy Guide:
+          - if @character.link
+            %td= link_to "Strategy Guide", @character.link
+          - else
+            %td N/A
+    - if @character.matches.where(:league_id => active_league.id).any?
+      .box
+        %h2 Recent Matches
+        %ul
+          - @character.matches.where(:league_id => active_league.id).recent.each do |match|
+            %li= character_match_link @character, match
   - if @character.strategies.any?
     .box
       %h2 Strategies
@@ -64,4 +66,7 @@
             = link_to s.creator.name.titleize, s.creator
   .box
     %h2 Write Strategy
-    = render :partial => 'strategy_posts/form', :locals => {:post => @post}
+    - if active_player
+      = render :partial => 'strategy_posts/form', :locals => {:post => @post}
+    - else
+      = link_to "Register in order to contribute articles!", login_path

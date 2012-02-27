@@ -9,11 +9,19 @@ class ApplicationController < ActionController::Base
   end
   helper_method :active_league
   def active_league
-    session[:active_league_id] ? League.find(session[:active_league_id]) : active_player.active_league rescue League.first
+    session[:active_league_id] ? League.find(session[:active_league_id]) : active_player.active_league rescue nil
+  end
+  
+  helper_method :al
+  def al 
+    {:league_id => active_league.id}
   end
   
   def require_login!
     redirect_to login_path unless active_player
+  end
+  def require_league!
+    redirect_to dashboard_path unless active_league
   end
   
   def logout!

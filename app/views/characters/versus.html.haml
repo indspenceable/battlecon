@@ -27,49 +27,50 @@
     })
 
 .column
-  .box
-    %h2 Statistics
-    %table.stats
-      %tr
-        %th
-        %th.title= @character.name.titleize
-        %th.title= @vs.name.titleize
-      %tr
-        %th Win Rate:
-        - if @character.matches.where(:league_id => active_league.id).count > 0
-          %td= (@character.wins.where(:league_id => active_league.id).count * 100.0 / @character.matches.where(:league_id => active_league.id).count).to_i
-        - else
-          %td No matches played.
-        - if @vs.matches.where(:league_id => active_league.id).count > 0
-          %td= (@vs.wins.where(:league_id => active_league.id).count * 100.0 / @vs.matches.where(:league_id => active_league.id).count).to_i
-        - else
-          %td No matches played.
-      %tr
-        %th Best Matchup:
-        - if @character.wins.where(:league_id => active_league.id).count > 0
-          %td= @character.best_matchup(active_league).name.titleize
-        - else
-          %td No wins yet.
-        - if @vs.wins.where(:league_id => active_league.id).count > 0
-          %td= @vs.best_matchup(active_league).name.titleize
-        - else
-          %td No wins yet.
-      %tr
-        %th Strategy Guide:
-        - if @character.link
-          %td= link_to "Strategy Guide", @character.link
-        - else
-          %td N/A
-        - if @vs.link
-          %td= link_to "Strategy Guide", @vs.link
-        - else
-          %td N/A
-  - if @character.matches_against(@vs).where(:league_id => active_league.id).count > 0
+  -if active_league
     .box
-      %h2 Recent Matches
-      %ul
-        - @character.matches_against(@vs).where(:league_id => active_league.id).recent.each do |match|
-          %li= character_vs_link match
+      %h2 Statistics
+      %table.stats
+        %tr
+          %th
+          %th.title= @character.name.titleize
+          %th.title= @vs.name.titleize
+        %tr
+          %th Win Rate:
+          - if @character.matches.where(:league_id => active_league.id).count > 0
+            %td= (@character.wins.where(:league_id => active_league.id).count * 100.0 / @character.matches.where(:league_id => active_league.id).count).to_i
+          - else
+            %td No matches played.
+          - if @vs.matches.where(:league_id => active_league.id).count > 0
+            %td= (@vs.wins.where(:league_id => active_league.id).count * 100.0 / @vs.matches.where(:league_id => active_league.id).count).to_i
+          - else
+            %td No matches played.
+        %tr
+          %th Best Matchup:
+          - if @character.wins.where(:league_id => active_league.id).count > 0
+            %td= @character.best_matchup(active_league).name.titleize
+          - else
+            %td No wins yet.
+          - if @vs.wins.where(:league_id => active_league.id).count > 0
+            %td= @vs.best_matchup(active_league).name.titleize
+          - else
+            %td No wins yet.
+        %tr
+          %th Strategy Guide:
+          - if @character.link
+            %td= link_to "Strategy Guide", @character.link
+          - else
+            %td N/A
+          - if @vs.link
+            %td= link_to "Strategy Guide", @vs.link
+          - else
+            %td N/A
+    - if @character.matches_against(@vs).where(:league_id => active_league.id).count > 0
+      .box
+        %h2 Recent Matches
+        %ul
+          - @character.matches_against(@vs).where(:league_id => active_league.id).recent.each do |match|
+            %li= character_vs_link match
   - if @character.matchup_strategies(@vs).any?
     .box
       %h2 Strategies
