@@ -1,6 +1,8 @@
 = content_for :header do
   %h1 Welcome to Battlecon!
 .column
+  =image_tag("character-icons/#{Character.find(rand(Character.count)).name.downcase}.png")
+.column
   .box.centered
     %h2 Login
     = form_tag do
@@ -10,24 +12,18 @@
       = label_tag :password
       = password_field_tag :password
       %br
-      = submit_tag
-.column
+      = submit_tag "Login"
   .box.centered
     %h2 Register
     = form_for(@player) do |f|
-      = f.label :name
-      = f.text_field :name
-      %br
-      = f.label :password
-      = f.password_field :password
-      %br
-      = f.label :password_confirmation
-      = f.password_field :password_confirmation
-      %br
-      = f.label :active_league_id
-      = f.text_field :active_league_id
-      OR
-      = f.label :new_league_name
-      = f.text_field :new_league_name
-      %br
-      = submit_tag
+      %p
+        = f.label :name
+        = f.text_field :name
+      %p
+        = f.label :password
+        = f.password_field :password
+      %p
+        = f.label :password_confirmation
+        = f.password_field :password_confirmation
+      %p
+        = submit_tag "Register"

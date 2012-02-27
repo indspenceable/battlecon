@@ -122,6 +122,13 @@ table.characters td.top-row {
 table.characters td.left-col {
   border-left: 1px solid black;
 }
+label {
+  clear: left;
+  float: left;
+  text-align: right;
+  width: 35%;
+}
+
 
 html, body {
   height: 100%;
@@ -130,7 +137,10 @@ html, body {
   min-height: 100%;
   height: auto !important;
   height: 100%;
-  margin: 0 auto -20px; /* the bottom margin is the negative value of the footer's height */
+  margin: 0 auto -25px; /* the bottom margin is the negative value of the footer's height */
+}
+.push {
+  clear: both;
 }
 .footer, .push {
   height: 19px; /* .push must be the same height as .footer */
