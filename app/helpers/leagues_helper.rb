@@ -1,4 +1,4 @@
-module LeagueHelper
+module LeaguesHelper
   def title(t=nil)
     @title = t if t
     @title

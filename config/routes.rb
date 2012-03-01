@@ -11,8 +11,9 @@ Battlecon::Application.routes.draw do
   resources :matches
   resources :strategy_posts
   
-  get 'league(/:id)' => 'league#index', :as => :dashboard
-  post 'league/:name' => 'league#join', :as => :join_league
-  match 'rankings(/:id)' => 'league#rankings', :as => :rankings
+  get 'league(/:id)' => 'leagues#index', :as => :dashboard
+  post 'league' => 'leagues#create', :as => :new_league
+  post 'league/:id' => 'leagues#join', :as => :join_league
+  match 'rankings(/:id)' => 'leagues#rankings', :as => :rankings
 
 end
