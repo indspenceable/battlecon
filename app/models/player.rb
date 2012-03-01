@@ -31,4 +31,11 @@ class Player < ActiveRecord::Base
   before_save do
     self.name = self.name.downcase
   end
+  
+  def to_param
+    name
+  end
+  def self.from_param *args
+    find_by_name *args
+  end
 end
