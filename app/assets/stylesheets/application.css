@@ -66,6 +66,14 @@ a:hover {
   text-align: center;
 }
 
+
+.flash.error {
+  background-color: #EBB;
+}
+.flash.success {
+  background-color: #BEB;
+}
+
 ul {
   list-style: none;
 }
