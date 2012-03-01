@@ -1,11 +1,34 @@
 = content_for :header do
   %h1 Record Match
-= form_for @match do |f|
-  = f.text_field(:creator_name, :disabled => true)
-  = f.hidden_field(:creator)
-  = f.collection_select(:creator_character, Character.all, :id, :name)
-  VS.
-  = f.collection_select(:opponent, @opponents, :id, :name)
-  = f.collection_select(:opponent_character, Character.all, :id, :name)
-  I won #{f.check_box(:creator_is_winner)}
-  = f.submit
+.box.centered
+  = form_for @match do |f|
+    %p
+      = f.text_field(:creator_name, :disabled => true)
+      = f.hidden_field(:creator)
+      = f.collection_select(:creator_character, Character.all, :id, :name)
+      Winner?
+      = f.check_box :creator_is_winner
+    %p VS.
+    %p
+      = f.collection_select(:opponent, @opponents, :id, :name)
+      = f.collection_select(:opponent_character, Character.all, :id, :name)
+      Winner?
+      = check_box_tag 'creator-loser-checkbox'
+    %br/
+    =f.hidden_field(:creator_is_winner)
+    %p= f.submit
+    
+:javascript
+  $(function() {
+    var $win = $('#match_creator_is_winner')
+    var $lose = $('#creator-loser-checkbox')
+    $win.on('change', function() {
+      $lose.prop('checked', !$win.prop('checked'))
+    })
+    $lose.on('change',function() {
+      $win.prop('checked', !$lose.prop('checked'))
+    })
+    $('form').on('submit', function() {
+      return $win.prop('checked') || $lose.prop('checked')
+    })
+  })
