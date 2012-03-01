@@ -1,8 +1,7 @@
 class LeaguesController < ApplicationController
   def index
-    if params[:id] && active_player && active_player.leagues.map(&:id).include?(params[:id])
-      active_player.active_league = params[:id]
-      active_player.save
+    if params[:id] && active_player && active_player.leagues.map(&:id).include?(params[:id].to_i)
+      active_player.update_attributes(:active_league_id => params[:id])
     else
       session[:active_league_id] = params[:id]
     end
@@ -29,8 +28,7 @@ class LeaguesController < ApplicationController
   def join
     league = League.find(params[:id])
     active_player.leagues << league
-    active_player.active_league = league
-    active_player.save
+    active_player.update_attributes(:active_league_id => league.id)
     flash[:success] = "Joined league successfully."
     redirect_to :back
   end
@@ -39,8 +37,7 @@ class LeaguesController < ApplicationController
     league = League.new(:name => params[:name])
     if league.save
       active_player.leagues << league
-      active_player.active_league = league
-      active_player.save
+      active_player.update_attributes(:active_league_id => league.id)
       flash[:success] = "Created new league."
       redirect_to dashboard_path(:id => league.id)
     else

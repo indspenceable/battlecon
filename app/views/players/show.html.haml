@@ -25,7 +25,7 @@
         - @player.leagues.each do |league|
           %li
             = form_tag join_league_path(league) do |f|
-              = league.name
+              = link_to league.name, dashboard_path(:id => league.id)
               - unless active_player.leagues.include?(league)
                 = submit_tag "Join this league."
           
