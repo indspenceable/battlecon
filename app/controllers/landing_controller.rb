@@ -5,7 +5,7 @@ class LandingController < ApplicationController
   end
   
   def process_login
-    auth = Player.find_by_name(params[:name].downcase).authenticate(params[:password])
+    auth = Player.find_by_name(params[:name].downcase).try(:authenticate, params[:password])
     if auth
       session[:player_id] = auth.id
       redirect_to dashboard_path, :flash => {:notice => "Successfully logged in."}
