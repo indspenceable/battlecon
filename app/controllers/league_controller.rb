@@ -1,9 +1,11 @@
 class LeagueController < ApplicationController
-  before_filter do
-    session[:active_league_id] = params[:league_id] if params[:league_id]
-  end
-  
   def index
+    if params[:id] && active_player && active_player.league_ids.include?(params[:id])
+      active_player.active_league = params[:id]
+      redirect_to :back
+    else
+      session[:active_league_id] = params[:id]
+    end
   end
   
   before_filter :require_league!, :only => :rankings
@@ -22,6 +24,10 @@ class LeagueController < ApplicationController
       p.leagues.include?(active_league)
     end
   end
-
   
+  #params[:name]
+  def join
+    league = League.find_by_name(params[:name])
+    active_player.leagues 
+  end
 end

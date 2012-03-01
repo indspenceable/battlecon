@@ -4,14 +4,33 @@
     - if @player.leagues.any? 
       
       = "(#{@player.rating})"
-%h2 
-  - if @player.matches.count > 0
-    Win Rate: #{(@player.wins.count * 100.0 / @player.matches.count).to_i}%
-  - else
-    No games played.
+.box
+  %h2
+    - if @player.matches.count > 0
+      Win Rate: #{(@player.wins.count * 100.0 / @player.matches.count).to_i}%
+    - else
+      No games played.
+      
 - if @player.matches.count > 0
   .box
     %h2 Recent Games (of #{@player.matches.count} total)
     %ul
       - @player.matches.recent.each do |match|
         %li= player_match_link @player, match
+.column 
+  .box
+    %h2 Leagues
+    - if @player.leagues.any?
+      - @player.league.each do |league|
+        = league.name
+    - else
+      Join a league in order to record plays.
+    = form_for join_league_path do
+      = label_tag 'League ID'
+      = text_field_tag 'league-id'
+.column
+  .box.centered
+    %h2 Join League
+    = form_tag join_league_path do
+      = label_tag 'League ID'
+      = text_field_tag 'league-id'
