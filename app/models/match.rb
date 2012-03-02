@@ -14,7 +14,7 @@ class Match < ActiveRecord::Base
   attr_accessor :opponent_character
   attr_accessor :creator_is_winner
   before_create do
-    if creator_is_winner
+    if creator_is_winner == "1"
       self.winning_character = Character.find creator_character
       self.winning_player = Player.find creator
       self.losing_character = Character.find opponent_character
