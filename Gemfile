@@ -28,6 +28,7 @@ end
 group :development, :test do
   gem 'sqlite3'
   gem 'rspec-rails'
+  gem 'capybara'
 end
 
 gem 'jquery-rails'
