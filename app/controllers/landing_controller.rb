@@ -8,9 +8,9 @@ class LandingController < ApplicationController
     auth = Player.find_by_name(params[:name].downcase).try(:authenticate, params[:password])
     if auth
       session[:player_id] = auth.id
-      redirect_to dashboard_path, :flash => {:notice => "Successfully logged in."}
+      redirect_to dashboard_path, :flash => {:success => "Welcome back!"}
     else
-      redirect_to login_path, :flash => {:error => "Incorrect username or password"}
+      redirect_to login_path, :flash => {:error => "Incorrect username or password."}
     end
   end
   

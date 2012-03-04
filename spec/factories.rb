@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :player do
     name "testacc"
-    password "password"
+    password "secret"
     password_confirmation { password }
   end
 end
