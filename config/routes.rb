@@ -3,6 +3,7 @@ Battlecon::Application.routes.draw do
   root :to => 'landing#index', :as => :login, :via => :get
   root :to => 'landing#process_login', :via => :post
   match '/logout' => 'landing#logout', :as => :logout
+  match '/about' => 'landing#about', :as => :about
   
   resources :players
   resources :characters do

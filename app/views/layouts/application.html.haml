@@ -12,6 +12,8 @@
           = yield :header
       .nav
         .content
+          = link_to "About", about_path
+          |
           = link_to "Characters", dashboard_path
           |
           - if active_player 
