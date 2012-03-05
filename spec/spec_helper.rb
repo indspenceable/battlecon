@@ -43,7 +43,7 @@ RSpec.configure do |config|
   config.infer_base_class_for_anonymous_controllers = false
 end
 
-def login! pass = player.password
+def login! player, pass = player.password
   visit login_path
   fill_in "name", :with => player.name
   fill_in "password", :with => pass

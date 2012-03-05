@@ -4,4 +4,8 @@ FactoryGirl.define do
     password "secret"
     password_confirmation { password }
   end
+  
+  factory :league do
+    name "testleague"
+  end
 end
