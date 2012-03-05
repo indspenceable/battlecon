@@ -1,22 +1,25 @@
 require 'spec_helper'
 
-describe "Logging in/out" do
+describe "Landing" do
+  let :player do
+    FactoryGirl.create(:player, :password => 'secret')
+  end
+  
   describe "logging in" do
     it "A user who enters the correct password should be logged in" do
-      player = FactoryGirl.create(:player, :password => 'secret')
-      visit login_path
-      fill_in "name", :with => player.name
-      fill_in "password", :with => player.password
-      click_button "Login"
+      login!
       page.should have_content "Welcome back"
     end
     it "should deny access for incorrect passwords" do
-      player = FactoryGirl.create(:player, :password => 'secret')
-      visit login_path
-      fill_in "name", :with => player.name
-      fill_in "password", :with => "somethingelse"
-      click_button "Login"
+      login! 'incorrect'
       page.should have_content "Incorrect username or password."
+    end
+  end
+  describe "logging out" do
+    it "should be able to log out" do
+      login!
+      click_link "Logout"
+      page.should have_content "Login"
     end
   end
 end
