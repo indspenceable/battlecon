@@ -58,7 +58,9 @@ class Attributes
       end
     end
   end
-
+  def name
+    self.class.name.downcase
+  end
 
   # default properties - power, range, and priority are always printed on every card
   # so they don't have defaults. but stun guard and soak are presumed to be 0.

@@ -25,10 +25,17 @@ class Player
     @position
   end
   
-  def attack_pair! b,f
-    @form = @forms.detect {|c| c.class.name.downcase == f.to_s}
+  def possible_attack_pairs
+    @forms.map do |f|
+      @bases.map do |b|
+        ["#{f.name}:#{b.name}"]
+      end
+    end.flatten
+  end
+  def attack_pair! f,b
+    @form = @forms.detect {|c| c.name == f.to_s}
     raise RuntimeError.new("Don't have that form. #{f}") unless @form
-    @base = @bases.detect {|c| c.class.name.downcase == b.to_s}
+    @base = @bases.detect {|c| c.name == b.to_s}
     raise RuntimeError.new("Don't have that base. #{b}") unless @base
     @bases.delete(@base)
     @forms.delete(@form)
@@ -199,6 +206,6 @@ class Cadenza < Player
       Mechanical.new,
       Hydraulic.new
     ]
-    @bases << 
+    @bases << Press.new
   end
 end

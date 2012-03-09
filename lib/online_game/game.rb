@@ -18,6 +18,20 @@ class InputFetcher
     raise IncorrectAnswerException.new(options.join(' ')) unless options.include?(@input_buffer.first)
     @input_buffer.slice!(0)
   end
+  def multi_request! hsh
+    responses = {}
+    2.times do
+      raise InputRequiredException.new("I need this input - #{hsh.inspect}") if @input_buffer.empty? 
+      person,ans = *@input_buffer.slice!(0).split(':',2)
+      person = person.to_sym
+      raise IncorrectAnswerException.new("Noone named #{person} was queried") unless hsh.key? person
+      raise IncorrectAnsewrException.new("Already got an answer for #{person}") if responses.key? person
+      raise IncorrectAnswerException.new("#{person} tried invalid option #{ans} out of #{hsh[person]}") unless hsh[person].include?(ans)
+      responses[person] = ans
+    end
+    responses
+  end
+  
   def request_attack_pairs!
     pairs = {}
     4.times do
@@ -75,9 +89,12 @@ class Game
     @player2.reset!  
   end
   def planning
-    pairs = @input.request_attack_pairs!
-    @player1.attack_pair!(pairs[:p1b], pairs[:p1f])
-    @player2.attack_pair!(pairs[:p2b], pairs[:p2f])
+    # pairs = @input.request_attack_pairs!
+    # @player1.attack_pair!(pairs[:p1b], pairs[:p1f])
+    # @player2.attack_pair!(pairs[:p2b], pairs[:p2f])
+    pairs = @input.multi_request!(:p1 => @player1.possible_attack_pairs, :p2 => @player2.possible_attack_pairs)
+    @player1.attack_pair!(*pairs[:p1].split(':'))
+    @player2.attack_pair!(*pairs[:p2].split(':'))
   end
 
   def ante
