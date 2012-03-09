@@ -1,4 +1,4 @@
-require './attributes'
+require File.join(File.dirname(__FILE__), 'attributes')
 class Base < Attributes
   def source
     'base'

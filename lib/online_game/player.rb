@@ -1,10 +1,10 @@
-require './bases'
-require './forms'
+require File.join(File.dirname(__FILE__), 'bases')
+require File.join(File.dirname(__FILE__), 'forms')
 
 class Player
   attr_reader :base, :form, :life, :name
   attr_accessor :opponent
-  def initialize(position,name)
+  def initialize(input, position,name)
     @name = name
     @position = position
     @life = 20
@@ -20,7 +20,12 @@ class Player
     @discard1 = []
     @discard2 = []
     
+    @input = input
   end
+  def ante
+    #By default, nothing happens during ante
+  end
+  
   def position
     @position
   end
@@ -42,7 +47,6 @@ class Player
   end
   def sources
     [@base,@form]
-    
   end
   def sum m
     sources.map(&m).inject(&:+)
@@ -59,16 +63,16 @@ class Player
   end
   
   [:start_of_beat,:before_activation,:on_hit,:on_damage,:after_activation,:end_of_beat].each do |time|
-    define_method :"#{time}!" do |inputs|
+    define_method :"#{time}!" do
       while true
         options = all_options_for(time)
         return if options.empty?
         if options.size == 1
           abil,action = *options[0].split(':')
-          self.send(abil).send(action,self,inputs)
+          self.send(abil).send(action,self,@input)
         else
-          abil,action = *inputs.request!(options).split(':')
-          self.send(abil).send(action,self,inputs)
+          abil,action = *@input.request!(options).split(':')
+          self.send(abil).send(action,self,@input)
         end
       end
     end
@@ -151,8 +155,8 @@ class Player
     adjusted_damage = 0 if adjusted_damage < 0
     @life -= adjusted_damage
     raise GameWonException.new(opponent) if @life <= 0
-    if adjusted_damage > stun_guard
-      @stunned = true
+    if stuns? adjusted_damage
+      stun!
     end
     adjusted_damage
   end
@@ -172,12 +176,14 @@ class Player
     
   end
   
+  def stun!
+    @stunned = true
+  end
   def stunned?
     @stunned
   end
-  def reset!
-    unstun!
-    dodge! false
+  def stuns? damage
+    damage > stun_guard
   end
   def unstun!
     @stunned = false
@@ -185,6 +191,11 @@ class Player
   def stun_guard
     sum :stun_guard
   end
+  def reset!
+    unstun!
+    dodge! false
+  end
+  
 end
 class Generic < Player
   def initialize *args
@@ -204,8 +215,25 @@ class Cadenza < Player
       Clockwork.new,
       Grapnel.new,
       Mechanical.new,
-      Hydraulic.new
+      Hydraulic.new,
+      NoForm.new
     ]
     @bases << Press.new
+    @iron_body_token_count = 3
+  end
+  def ante
+    @iron_body = false
+  end
+  def stuns? damage
+    if super && !@iron_body
+      if @iron_body_token_count > 0
+        if @input.request!(['iron_body','pass']) == 'iron_body'
+          @iron_body = true
+          @iron_body_token_count -= 1
+          return false
+        end
+      end
+      true
+    end
   end
 end

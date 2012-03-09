@@ -1,4 +1,4 @@
-require './player'
+require File.join(File.dirname(__FILE__), 'player')
 require 'yaml'
 
 class InputRequiredException < RuntimeError;end
@@ -44,16 +44,17 @@ class InputFetcher
 end
 
 class Game
-  def initialize previous_inputs = []
-
-    @player1 = Cadenza.new 1, 'p1'
-    @player2 = Generic.new 5, 'p2'
+  def setup previous_inputs = []
+    @input = InputFetcher.new(previous_inputs)
+    @player1 = Cadenza.new @input, 1, 'p1'
+    @player2 = Generic.new @input, 5, 'p2'
     @player1.opponent= @player2
     @player2.opponent= @player1
   end
   
   def run previous_inputs
-    @input = InputFetcher.new(previous_inputs)
+    setup previous_inputs
+    
     15.times do
       puts "-----------------------------"
       puts "Player one is at #{@player1.position} (#{@player1.life} / 20)"
@@ -117,26 +118,26 @@ class Game
   end
 
   def start_of_beat 
-    @active.start_of_beat! @input
-    @reactive.start_of_beat! @input
+    @active.start_of_beat!
+    @reactive.start_of_beat!
   end
   def activate activator
     puts "#{activator.name} is activating #{activator.base.class.name}"
-    activator.before_activation! @input
+    activator.before_activation!
     if activator.hits?
       puts "it's in range!"
-      activator.on_hit! @input
+      activator.on_hit!
       if activator.deal_damage > 0
         puts "and it dealt damage!"
-        activator.on_damage! @input
+        activator.on_damage!
       end
     end
-    activator.after_activation! @input
+    activator.after_activation!
   end
   
   def end_of_beat 
-    @active.end_of_beat! @input
-    @reactive.end_of_beat! @input
+    @active.end_of_beat!
+    @reactive.end_of_beat!
   end
   
   def recycle
