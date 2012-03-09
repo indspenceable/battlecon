@@ -1,5 +1,7 @@
 require File.join(File.dirname(__FILE__), 'bases')
 require File.join(File.dirname(__FILE__), 'forms')
+require File.join(File.dirname(__FILE__), 'tokens')
+
 
 class Player
   attr_reader :base, :form, :life, :name
@@ -21,6 +23,7 @@ class Player
     @discard2 = []
     
     @input = input
+    @sources = []
   end
   def ante
     #By default, nothing happens during ante
@@ -44,9 +47,10 @@ class Player
     raise RuntimeError.new("Don't have that base. #{b}") unless @base
     @bases.delete(@base)
     @forms.delete(@form)
+    @sources << @base << @form
   end
   def sources
-    [@base,@form]
+    @sources
   end
   def sum m
     sources.map(&m).inject(&:+)
@@ -169,11 +173,12 @@ class Player
     @discard2.each{|x| gain! x}
     @discard2 = @discard1
     @discard1 = [@base,@form]
+    @sources.delete(@base)
+    @sources.delete(@form)
   end
   def gain! x
     @bases << x.class.new if x.is_a?(Base)
-    @forms << x.class.new if x.is_a?(Form)
-    
+    @forms << x.class.new if x.is_a?(Form)   
   end
   
   def stun!
@@ -216,7 +221,7 @@ class Cadenza < Player
       Grapnel.new,
       Mechanical.new,
       Hydraulic.new,
-      NoForm.new
+      Battery.new
     ]
     @bases << Press.new
     @iron_body_token_count = 3
@@ -224,6 +229,7 @@ class Cadenza < Player
   def ante
     @iron_body = false
   end
+
   def stuns? damage
     if super && !@iron_body
       if @iron_body_token_count > 0
@@ -235,5 +241,13 @@ class Cadenza < Player
       end
       true
     end
+  end
+  
+  def end_of_beat!
+    @sources.delete_if do |t|
+      puts "Removing token #{t}: #{t.is_a?(Token)}"
+      t.is_a?(Token)
+    end
+    super
   end
 end

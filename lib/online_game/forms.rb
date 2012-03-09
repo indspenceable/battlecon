@@ -1,4 +1,5 @@
 require File.join(File.dirname(__FILE__), 'attributes')
+
 class Form < Attributes
   def source
     'form'
@@ -19,6 +20,10 @@ end
 class Hydraulic < Form
   prop range: 0, priority: -1, power: 2, soak: 1
   at :before_activation, :advance, select_from(advance: [1])
+end
+class Battery < Form
+  prop range:0, priority: -1, power: 1
+  at :end_of_beat, :power, ->(me,input) {me.sources << Priority.new(4)}
 end
 
 
