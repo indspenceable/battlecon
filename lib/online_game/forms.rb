@@ -14,7 +14,7 @@ class Grapnel < Form
 end
 class Mechanical < Form
   prop range: 0, power:2, priority: -2
-  at :end_of_beat, :pull, select_from(advance: [0,1,2,3])
+  at :end_of_beat, :advance, select_from(advance: [0,1,2,3])
 end
 class Hydraulic < Form
   prop range: 0, priority: -1, power: 2, soak: 1
