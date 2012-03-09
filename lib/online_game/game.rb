@@ -20,7 +20,7 @@ class InputFetcher
   end
   def request_attack_pairs!
     pairs = {}
-    2.times do
+    4.times do
       raise InputRequiredException.new('Need attack pairs') if @input_buffer.empty? 
       inp = @input_buffer.slice!(0)
       pairs.[]=(*inp.split(':').map(&:to_sym))
@@ -29,14 +29,11 @@ class InputFetcher
   end
 end
 
-class Form
-end
-
 class Game
   def initialize previous_inputs = []
 
-    @player1 = Player.new 1, 'p1'
-    @player2 = Player.new 5, 'p2'
+    @player1 = Cadenza.new 1, 'p1'
+    @player2 = Generic.new 5, 'p2'
     @player1.opponent= @player2
     @player2.opponent= @player1
   end
@@ -65,6 +62,7 @@ class Game
     planning
     ante
     reveal
+    resolve_clash
     determine_active_player
     start_of_beat
     activate @active unless @active.stunned?
@@ -91,6 +89,12 @@ class Game
     @player2.reveal!
   end
 
+  def resolve_clash
+    while @player1.priority == @player2.priority
+      # both players should select new pairs.
+    end
+  end
+
   def determine_active_player
     @active, @reactive = *(@player1.priority > @player2.priority ? [@player1,@player2] : [@player2,@player1])
   end
@@ -110,7 +114,6 @@ class Game
         activator.on_damage! @input
       end
     end
-    puts "Ok, after activation!"
     activator.after_activation! @input
   end
   

@@ -1,4 +1,5 @@
 require './bases'
+require './forms'
 
 class Player
   attr_reader :base, :form, :life, :name
@@ -6,7 +7,7 @@ class Player
   def initialize(position,name)
     @name = name
     @position = position
-    @life = 5
+    @life = 20
     
     @bases = [
       Strike.new,
@@ -25,20 +26,29 @@ class Player
   end
   
   def attack_pair! b,f
-    @form = Form.new
+    @form = @forms.detect {|c| c.class.name.downcase == f.to_s}
+    raise RuntimeError.new("Don't have that form. #{f}") unless @form
     @base = @bases.detect {|c| c.class.name.downcase == b.to_s}
     raise RuntimeError.new("Don't have that base. #{b}") unless @base
     @bases.delete(@base)
+    @forms.delete(@form)
+  end
+  def sources
+    [@base,@form]
+    
+  end
+  def sum m
+    sources.map(&m).inject(&:+)
   end
   def reveal!
     #nothing happens at reveal, yet
   end
   def priority
-    @base.priority
+    sum :priority
   end
 
   def all_options_for(time)
-    @base.send(time).map{|o| "base:#{o}"}
+    sources.map{|s| s.send(time).map{|o| "#{s.source}:#{o}"}}.flatten
   end
   
   [:start_of_beat,:before_activation,:on_hit,:on_damage,:after_activation,:end_of_beat].each do |time|
@@ -72,8 +82,18 @@ class Player
   def distance
     (position - @opponent.position).abs
   end
+  
+  # For each source, get its range as a Range or Nil.
+  def range
+    sources.inject(0..0) do |current_range, source|
+      i = source.range
+      return nil unless i
+      modifier = (i.is_a?(Fixnum) ? (i..i) : i)
+      (current_range.min + modifier.min)..(current_range.max + modifier.max)
+    end
+  end
   def in_range?
-    base.range.include? distance if base.range
+    range.include? distance if range
   end
   
   def direction
@@ -117,7 +137,7 @@ class Player
   end
   
   def deal_damage
-    opponent.take_damage! @base.damage
+    opponent.take_damage! sum(:power)
   end
   def take_damage! damage
     adjusted_damage = damage - soak
@@ -131,16 +151,18 @@ class Player
   end
   
   def soak
-    @base.soak
+    sum :soak
   end
 
   def recycle!
     @discard2.each{|x| gain! x}
     @discard2 = @discard1
-    @discard1 = [@base]
+    @discard1 = [@base,@form]
   end
   def gain! x
     @bases << x.class.new if x.is_a?(Base)
+    @forms << x.class.new if x.is_a?(Form)
+    
   end
   
   def stunned?
@@ -154,6 +176,29 @@ class Player
     @stunned = false
   end
   def stun_guard
-    @base.stun_guard
+    sum :stun_guard
+  end
+end
+class Generic < Player
+  def initialize *args
+    super(*args)
+    @forms = [
+      NoForm.new,
+      NoForm.new,
+      NoForm.new
+    ]
+  end
+end
+
+class Cadenza < Player
+  def initialize *args
+    super(*args)
+    @forms = [
+      Clockwork.new,
+      Grapnel.new,
+      Mechanical.new,
+      Hydraulic.new
+    ]
+    @bases << 
   end
 end
