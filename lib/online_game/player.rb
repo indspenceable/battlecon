@@ -68,6 +68,14 @@ class Player
     sources.map{|s| s.send(time).map{|o| "#{s.source}:#{o}"}}.flatten
   end
   
+  def reveal!
+    #reveal effects are not time sensitive.
+    all_options_for(:reveal).each do |opt|
+      abil,action = *opt.split(':')
+      self.send(abil).send(action,self,@input)
+    end
+  end
+  
   [:start_of_beat,:before_activation,:on_hit,:on_damage,:after_activation,:end_of_beat].each do |time|
     define_method :"#{time}!" do
       while true
@@ -156,9 +164,13 @@ class Player
   def deal_damage
     opponent.take_damage! sum(:power)
   end
-  def take_damage! damage
-    adjusted_damage = damage - soak
+  def determine_damage damage
+    adjusted_damage - soak
     adjusted_damage = 0 if adjusted_damage < 0
+    adjusted_damage
+  end
+  def take_damage! damage
+    adjusted_damage = determine_damage damage
     @life -= adjusted_damage
     raise GameWonException.new(opponent) if @life <= 0
     if stuns? adjusted_damage
