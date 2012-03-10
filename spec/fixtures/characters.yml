@@ -1,0 +1,128 @@
+cadenza:
+  id: 1
+  name: cadenza
+  created_at: 2012-02-13 03:46:20.989225000Z
+  updated_at: 2012-02-13 06:04:45.789454000Z
+  link: http://www.battleconnection.com/index.php?option=com_content&view=article&id=63
+heketch:
+  id: 2
+  name: heketch
+  created_at: 2012-02-13 03:46:21.011588000Z
+  updated_at: 2012-02-13 03:46:21.011588000Z
+  link: !!null 
+kallistar:
+  id: 3
+  name: kallistar
+  created_at: 2012-02-13 03:46:21.016021000Z
+  updated_at: 2012-02-13 03:46:21.016021000Z
+  link: !!null 
+lixis:
+  id: 4
+  name: lixis
+  created_at: 2012-02-13 03:46:21.020009000Z
+  updated_at: 2012-02-13 03:46:21.020009000Z
+  link: !!null 
+rukyuk:
+  id: 5
+  name: rukyuk
+  created_at: 2012-02-13 03:46:21.026374000Z
+  updated_at: 2012-02-13 03:46:21.026374000Z
+  link: !!null 
+tatsumijuto:
+  id: 6
+  name: tatsumijuto
+  created_at: 2012-02-13 03:46:21.030544000Z
+  updated_at: 2012-02-13 03:46:21.030544000Z
+  link: !!null 
+cherri:
+  id: 7
+  name: cherri
+  created_at: 2012-02-13 03:46:21.035121000Z
+  updated_at: 2012-02-13 03:46:21.035121000Z
+  link: !!null 
+hepzibah:
+  id: 8
+  name: hepzibah
+  created_at: 2012-02-13 03:46:21.039260000Z
+  updated_at: 2012-02-13 03:46:21.039260000Z
+  link: !!null 
+kehrolyn:
+  id: 9
+  name: kehrolyn
+  created_at: 2012-02-13 03:46:21.043877000Z
+  updated_at: 2012-02-13 03:46:21.043877000Z
+  link: !!null 
+luc:
+  id: 10
+  name: luc
+  created_at: 2012-02-13 03:46:21.078402000Z
+  updated_at: 2012-02-13 03:46:21.078402000Z
+  link: !!null 
+sagas:
+  id: 11
+  name: sagas
+  created_at: 2012-02-13 03:46:21.082797000Z
+  updated_at: 2012-02-13 03:46:21.082797000Z
+  link: !!null 
+vanaah:
+  id: 12
+  name: vanaah
+  created_at: 2012-02-13 03:46:21.087031000Z
+  updated_at: 2012-02-13 06:04:30.103028000Z
+  link: http://www.battleconnection.com/index.php?option=com_content&view=article&id=62
+demitras:
+  id: 13
+  name: demitras
+  created_at: 2012-02-13 03:46:21.091041000Z
+  updated_at: 2012-02-13 03:46:21.091041000Z
+  link: !!null 
+hikaru:
+  id: 14
+  name: hikaru
+  created_at: 2012-02-13 03:46:21.095225000Z
+  updated_at: 2012-02-13 06:03:47.152017000Z
+  link: http://www.battleconnection.com/index.php?option=com_content&view=article&id=61
+khadath:
+  id: 15
+  name: khadath
+  created_at: 2012-02-13 03:46:21.109169000Z
+  updated_at: 2012-02-13 03:46:21.109169000Z
+  link: !!null 
+magdelina:
+  id: 16
+  name: magdelina
+  created_at: 2012-02-13 03:46:21.113492000Z
+  updated_at: 2012-02-16 23:22:10.569698000Z
+  link: http://www.battleconnection.com/index.php?option=com_content&view=article&id=65
+seth:
+  id: 17
+  name: seth
+  created_at: 2012-02-13 03:46:21.117554000Z
+  updated_at: 2012-02-13 03:46:21.117554000Z
+  link: !!null 
+zaamassal:
+  id: 18
+  name: zaamassal
+  created_at: 2012-02-13 03:46:21.121541000Z
+  updated_at: 2012-02-13 03:46:21.121541000Z
+  link: !!null 
+danny:
+  id: 19
+  name: danny
+  created_at: 2012-02-16 03:50:12.927299000Z
+  updated_at: 2012-02-16 03:50:12.927299000Z
+  link: !!null 
+robert:
+  id: 20
+  name: robert
+  created_at: 2012-02-16 03:50:16.462925000Z
+  updated_at: 2012-02-16 03:50:16.462925000Z
+  link: !!null 
+clauswyndhal:
+  id: 21
+  name: clauswyndhal
+  created_at: 2012-02-16 03:50:41.393556000Z
+  updated_at: 2012-02-16 03:50:41.393556000Z
+  link: !!null 
+
+
