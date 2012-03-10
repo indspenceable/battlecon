@@ -1,4 +1,6 @@
 require File.join(File.dirname(__FILE__), 'cadenza')
+require File.join(File.dirname(__FILE__), 'hikaru')
+
 require 'yaml'
 
 class InputRequiredException < RuntimeError;end
@@ -47,7 +49,7 @@ class Game
   def setup previous_inputs = []
     @input = InputFetcher.new(previous_inputs)
     @player1 = Cadenza.new @input, 1, 'p1'
-    @player2 = Generic.new @input, 5, 'p2'
+    @player2 = Hikaru.new @input, 5, 'p2'
     @player1.opponent= @player2
     @player2.opponent= @player1
   end
@@ -55,8 +57,9 @@ class Game
   def run previous_inputs
     setup previous_inputs
     
-    15.times do
+    15.times do |x|
       puts "-----------------------------"
+      puts "Beat ##{x+1}"
       puts "Player one is at #{@player1.position} (#{@player1.life} / 20)"
       puts "Player two is at #{@player2.position} (#{@player2.life} / 20)"
       beat
@@ -78,6 +81,7 @@ class Game
     ante
     reveal
     resolve_clash
+    no_trigger
     determine_active_player
     start_of_beat
     activate @active unless @active.stunned?
@@ -103,7 +107,6 @@ class Game
     cp,op = @player1,@player2
     loop do
       puts "ANTE PHASE"
-  
       p = c
       c = cp.ante
       cp,op = op,cp
@@ -115,11 +118,23 @@ class Game
     @player1.reveal!
     @player2.reveal!
   end
+  def no_trigger
+    @player1.no_trigger!
+    @player2.no_trigger!
+  end
 
   def resolve_clash
     while @player1.priority == @player2.priority
-      # both players should select new pairs.
+      puts "****** CLASH at #{@player1.priority} Priority! ******"
+      @player1.clash!
+      @player2.clash!
+      # both should select new bases
+      new_bases = @input.multi_request!(:p1 => @player1.base_names, :p2 => @player2.base_names)
+      @player1.resolve_clash! new_bases[:p1]
+      @player2.resolve_clash! new_bases[:p2]
     end
+    @player1.finalize_attack_pair!
+    @player2.finalize_attack_pair!
   end
 
   def determine_active_player

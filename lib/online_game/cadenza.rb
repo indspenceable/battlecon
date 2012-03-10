@@ -32,7 +32,9 @@ end
 # Unique Base
 class Press < Base
   prop range: (1..2), power: 1, priority: 0, stun_guard: 6
-  # EXTRA POWER
+  at :no_trigger, :gather_power, ->(me,input) do
+    me.gather_power!
+  end
 end
 
 
@@ -49,12 +51,14 @@ class Cadenza < Player
     @bases << Press.new
     @iron_body_token_count = 3
     @active_tokens = []
+    @gathering_power_for_press = false
   end
   
   # If cadenza has a token left, he may spend it to get STUN
   # IMMUNITY for the round, but only during ante
   def ante
     @iron_body = false
+    @gathering_power_for_press = false
     return false if @active_tokens.any?{|t| t.is_a? IronBody }
     if @iron_body_token_count > 0
       if @input.request!(['iron_body','pass']) == 'iron_body'
@@ -64,7 +68,19 @@ class Cadenza < Player
       end
     end
   end
+  def gather_power!
+    puts "GATHERING POWER FOR PRESS"
+    @gathering_power_for_press = 0
+  end
 
+  def take_damage! damage
+    d = super
+    @gathering_power_for_press += d  and puts "MORE POWER" if @gathering_power_for_press
+    d
+  end
+  def power
+    (@gathering_power_for_press || 0) + super
+  end
 
   # Cadenza's main ability is that whenever he would get stunned,
   # he can spend a token to negate that stun.
@@ -86,7 +102,9 @@ class Cadenza < Player
   def aux_sources
     @active_tokens
   end
-  
+  def active_tokens
+    @active_tokens
+  end
   def end_of_beat!
     @active_tokens = []
     super

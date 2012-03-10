@@ -5,6 +5,9 @@ require File.join(File.dirname(__FILE__), 'tokens')
 
 class Player
   attr_reader :base, :form, :life, :name
+  def base_names
+    @bases.map(&:name)
+  end
   attr_accessor :opponent
   def initialize(input, position,name)
     @name = name
@@ -23,7 +26,7 @@ class Player
     @discard2 = []
     
     @input = input
-    @sources = []
+    @used_bases = []
   end
   def ante
     #By default, nothing happens during ante
@@ -48,6 +51,19 @@ class Player
     @bases.delete(@base)
     @forms.delete(@form)
   end
+  def clash!
+    @used_bases << @base
+  end
+  def resolve_clash! b
+    @base = @bases.detect {|c| c.name == b.to_s}
+    raise RuntimeError.new("Don't have that base. #{b}") unless @base
+    @bases.delete(@base)
+  end
+  def finalize_attack_pair!
+    @bases += @used_bases
+    @used_bases = []
+  end
+
   def sources
     [@base,@form] + aux_sources
   end
@@ -68,11 +84,13 @@ class Player
     sources.map{|s| s.send(time).map{|o| "#{s.source}:#{o}"}}.flatten
   end
   
-  def reveal!
-    #reveal effects are not time sensitive.
-    all_options_for(:reveal).each do |opt|
-      abil,action = *opt.split(':')
-      self.send(abil).send(action,self,@input)
+  [:reveal, :no_trigger].each do |time|
+    define_method :"#{time}!" do
+      #reveal/no_trigger effects are not time sensitive.
+      all_options_for(time).each do |opt|
+        abil,action = *opt.split(':')
+        self.send(abil).send(action,self,@input)
+      end
     end
   end
   
@@ -160,12 +178,14 @@ class Player
   def pull! n
     opponent.advance! n
   end
-  
+  def power
+    sum(:power)
+  end
   def deal_damage
-    opponent.take_damage! sum(:power)
+    opponent.take_damage! power
   end
   def determine_damage damage
-    adjusted_damage - soak
+    adjusted_damage = damage - soak
     adjusted_damage = 0 if adjusted_damage < 0
     adjusted_damage
   end

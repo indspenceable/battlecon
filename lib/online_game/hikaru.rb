@@ -3,14 +3,14 @@ require File.join(File.dirname(__FILE__), 'bases')
 require File.join(File.dirname(__FILE__), 'forms')
 require File.join(File.dirname(__FILE__), 'player')
  
-class Air < Token
-  prop range: (-1..1), name: 'air'
+class Water < Token
+  prop range: (-1..1), name: 'water'
 end
 class Fire < Token
   prop power: 3, name: 'fire'
 end
 class Wind < Token
-  prop priority: 2, name: 'earth'
+  prop priority: 2, name: 'wind'
 end
 class Earth < Token
   prop soak: 3, name: 'earth'
@@ -49,7 +49,7 @@ end
 class Sweeping < Form
   prop range: 0, power: -1, priority: 3
   at :reveal, :suck, ->(me,input) do
-    me.sweep
+    me.sweep!
   end
 end
 class Advancing < Form 
@@ -73,6 +73,14 @@ end
 class Hikaru < Player
   def initialize *args
     super
+    @forms = [
+      Trance.new,
+      Focused.new,
+      Geomantic.new,
+      Sweeping.new,
+      Advancing.new
+    ]
+    @bases << PalmStrike.new
     @token_pool = [Fire.new, Water.new, Wind.new, Earth.new]
     @active_tokens = []
     @token_discard = []
@@ -81,23 +89,26 @@ class Hikaru < Player
   def token_pool_names
     @token_pool.map(&:name)
   end
-  def spent_token_names@
+  def spent_token_names
     @token_discard.map(&:name)
   end
   
   def aux_sources
     @active_tokens
   end
-  def ante_token! token
+  def ante_token! token_name
+    puts "Trying to ante #{token_name}"
+    token = @token_pool.find{|f| f.name == token_name}
+    puts "Found #{token}"
     @active_tokens << token
     @token_pool.delete token
-    puts "Selected #{f.name}"
+    puts "Selected #{token.name}"
   end
   def ante
     if @active_tokens.empty? && @token_pool.any?
       selection = @input.request!(token_pool_names + ['none'])
       return false if selection == 'none'
-      ante_token! @token_pool.find{|f| f.name == selection}
+      ante_token! selection
     end
   end
   def unante!
@@ -105,7 +116,9 @@ class Hikaru < Player
     @active_tokens = []
   end
   def recover_token! x
-    @token_pool << @token_discard.delete(x)
+    t = @token_discard.find{|y| y.name == x}
+    @token_pool << t
+    @token_discard.delete(t)
   end
   def reveal!
     @sweeping = false
