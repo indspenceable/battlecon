@@ -23,9 +23,8 @@ class Hydraulic < Form
 end
 class Battery < Form
   prop range:0, priority: -1, power: 1
-  at :end_of_beat, :power, ->(me,input) {me.sources << Priority.new(4)}
+  at :end_of_beat, :power, ->(me,input) {me.active_tokens << Priority.new(4)}
 end
-
 
 class NoForm < Form
   prop range:0, priority: 0, power: 0

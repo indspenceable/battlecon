@@ -99,7 +99,16 @@ class Game
   end
 
   def ante
-    # TODO
+    p,c = true,true
+    cp,op = @player1,@player2
+    loop do
+      puts "ANTE PHASE"
+  
+      p = c
+      c = cp.ante
+      cp,op = op,cp
+      return unless (p || c)
+    end
   end
 
   def reveal

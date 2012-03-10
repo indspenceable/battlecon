@@ -64,6 +64,5 @@ class Attributes
 
   # default properties - power, range, and priority are always printed on every card
   # so they don't have defaults. but stun guard and soak are presumed to be 0.
-  prop stun_guard: 0
-  prop soak: 0
+  prop stun_guard: 0, stun_immunity: false, soak: 0
 end

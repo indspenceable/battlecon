@@ -47,10 +47,12 @@ class Player
     raise RuntimeError.new("Don't have that base. #{b}") unless @base
     @bases.delete(@base)
     @forms.delete(@form)
-    @sources << @base << @form
   end
   def sources
-    @sources
+    [@base,@form] + aux_sources
+  end
+  def aux_sources
+    []
   end
   def sum m
     sources.map(&m).inject(&:+)
@@ -173,8 +175,6 @@ class Player
     @discard2.each{|x| gain! x}
     @discard2 = @discard1
     @discard1 = [@base,@form]
-    @sources.delete(@base)
-    @sources.delete(@form)
   end
   def gain! x
     @bases << x.class.new if x.is_a?(Base)
@@ -187,8 +187,12 @@ class Player
   def stunned?
     @stunned
   end
+  
+  def stun_immunity?
+    sources.any?(&:stun_immunity)
+  end
   def stuns? damage
-    damage > stun_guard
+    damage > stun_guard unless stun_immunity?
   end
   def unstun!
     @stunned = false
@@ -225,11 +229,26 @@ class Cadenza < Player
     ]
     @bases << Press.new
     @iron_body_token_count = 3
+    @active_tokens = []
   end
+  
+  # If cadenza has a token left, he may spend it to get STUN
+  # IMMUNITY for the round, but only during ante
   def ante
     @iron_body = false
+    return false if @active_tokens.any?{|t| t.is_a? IronBody }
+    if @iron_body_token_count > 0
+      if @input.request!(['iron_body','pass']) == 'iron_body'
+        @active_tokens << IronBody.new
+        @iron_body_token_count -= 1
+        true
+      end
+    end
   end
 
+
+  # Cadenza's main ability is that whenever he would get stunned,
+  # he can spend a token to negate that stun.
   def stuns? damage
     if super && !@iron_body
       if @iron_body_token_count > 0
@@ -243,11 +262,14 @@ class Cadenza < Player
     end
   end
   
+  #TODO - this might just make sense to have in the player.
+  #Essentially everyone is going to use this (except, of course, ZAAM)
+  def aux_sources
+    @active_tokens
+  end
+  
   def end_of_beat!
-    @sources.delete_if do |t|
-      puts "Removing token #{t}: #{t.is_a?(Token)}"
-      t.is_a?(Token)
-    end
+    @active_tokens = []
     super
   end
 end
