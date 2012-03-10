@@ -38,7 +38,7 @@ end
 
 class Cadenza < Player
   def initialize *args
-    super(*args)
+    super
     @forms = [
       Clockwork.new,
       Grapnel.new,
