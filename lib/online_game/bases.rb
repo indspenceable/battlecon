@@ -34,10 +34,3 @@ class Dash < Base
     end
   end
 end
-
-
-# Cadenza
-class Press < Base
-  prop range: (1..2), power: 1, priority: 0, stun_guard: 6
-  # EXTRA POWER
-end

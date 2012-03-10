@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), 'player')
+require File.join(File.dirname(__FILE__), 'cadenza')
 require 'yaml'
 
 class InputRequiredException < RuntimeError;end
