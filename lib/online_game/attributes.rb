@@ -53,7 +53,7 @@ module Online
           puts "Doing: #{method} -> #{arg}"
           me.send(:"#{valid_options.first.first}!", valid_options.first.last.first)
         else
-          method,arg = *input.request!(valid_options.map{|k,v| v.map{|i| "#{k}:#{i}"}}.flatten).split(':')
+          method,arg = *input.request!(me.name, valid_options.map{|k,v| v.map{|i| "#{k}:#{i}"}}.flatten).split(':')
           puts "Doing: #{method} -> #{arg}"
           me.send(:"#{method}!", arg.to_i)
         end

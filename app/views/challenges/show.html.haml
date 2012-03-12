@@ -3,3 +3,19 @@
 .box
   %h2 Challenge bullshit
   .stuff= @challenge.game_state
+
+:javascript
+  function refreshStatus() {
+    $.get('#{@challenge.id}.json', function(data) {
+      console.log(data);
+    })
+  }
+  function inp(x) {
+    $.post(''
+    , {input: x}
+    , function(data){ 
+      if (data.success) {
+        $('.stuff').html(data.output + "<br/>" + data.exception)
+      }
+    })
+  }

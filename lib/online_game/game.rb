@@ -14,24 +14,33 @@ module Online
   class InputFetcher
     def initialize prev
       @input_buffer = prev
+      @pending_input = {}
     end
-    def request! options
-      raise Online::InputRequiredException.new(options.join(' ')) if @input_buffer.empty?
-      raise Online::IncorrectAnswerException.new(options.join(' ')) unless options.include?(@input_buffer.first)
-      @input_buffer.slice!(0)
+    def request! name,options
+      @pending_input[name] = options
+      raise Online::InputRequiredException.new(options.map{|o| "#{name}:#{o}"}.join(' ')) if @input_buffer.empty?
+      me,option = @input_buffer.slice!(0).split(':',2)
+      raise Online::IncorrectAnswerException.new(options.map{|o| "#{name}:#{o}"}.join(' ')) unless options.include?(option)
+      @pending_input.delete(name)
+      option
     end
     def multi_request! hsh
       responses = {}
-      2.times do
-        raise Online::InputRequiredException.new("I need this input - #{hsh.inspect}") if @input_buffer.empty? 
+      @pending_input = hsh.dup
+      hsh.keys.count.times do
+        raise Online::InputRequiredException.new("I need this input - #{hsh.reject{|k,v| responses.key? k}.inspect}") if @input_buffer.empty? 
         person,ans = *@input_buffer.slice!(0).split(':',2)
-        person = person.to_sym
         raise Online::IncorrectAnswerException.new("Noone named #{person} was queried") unless hsh.key? person
         raise Online::IncorrectAnswerException.new("Already got an answer for #{person}") if responses.key? person
         raise Online::IncorrectAnswerException.new("#{person} tried invalid option #{ans} out of #{hsh[person]}") unless hsh[person].include?(ans)
+        @pending_input.delete person
         responses[person] = ans
       end
       responses
+    end
+    def pending
+      puts "PENDING INPUT"
+      (@pending_input||{})
     end
   end
 
@@ -46,6 +55,13 @@ module Online
     end
     def inputs
       @complete_input_list || []
+    end
+    def pending_input n
+      @input.pending[n]
+    end
+    def player_jsons
+      puts "Got the jsons"
+      return {'p1' => @player1.jsonify, 'p2' => @player2.jsonify}
     end
     
     #TODO this shouldn't be rescuing exceptions, instead, it should be
@@ -93,9 +109,9 @@ module Online
       # pairs = @input.request_attack_pairs!
       # @player1.attack_pair!(pairs[:p1b], pairs[:p1f])
       # @player2.attack_pair!(pairs[:p2b], pairs[:p2f])
-      pairs = @input.multi_request!(:p1 => @player1.possible_attack_pairs, :p2 => @player2.possible_attack_pairs)
-      @player1.attack_pair!(*pairs[:p1].split(':'))
-      @player2.attack_pair!(*pairs[:p2].split(':'))
+      pairs = @input.multi_request!('p1' => @player1.possible_attack_pairs, 'p2' => @player2.possible_attack_pairs)
+      @player1.attack_pair!(*pairs['p1'].split(':'))
+      @player2.attack_pair!(*pairs['p2'].split(':'))
     end
 
     def ante
@@ -125,9 +141,9 @@ module Online
         @player1.clash!
         @player2.clash!
         # both should select new bases
-        new_bases = @input.multi_request!(:p1 => @player1.base_names, :p2 => @player2.base_names)
-        @player1.resolve_clash! new_bases[:p1]
-        @player2.resolve_clash! new_bases[:p2]
+        new_bases = @input.multi_request!('p1' => @player1.base_names, 'p2' => @player2.base_names)
+        @player1.resolve_clash! new_bases['p1']
+        @player2.resolve_clash! new_bases['p2']
       end
       @player1.finalize_attack_pair!
       @player2.finalize_attack_pair!

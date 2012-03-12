@@ -65,13 +65,13 @@ module Online
     end
 
     def sources
-      [@base,@form] + aux_sources
+      ([@base,@form] + aux_sources).compact
     end
     def aux_sources
       []
     end
     def sum m
-      sources.map(&m).inject(&:+)
+      sources.map(&m).inject(0,&:+)
     end
     def reveal!
       #nothing happens at reveal, yet
@@ -103,7 +103,7 @@ module Online
             abil,action = *options[0].split(':')
             self.send(abil).send(action,self,@input)
           else
-            abil,action = *@input.request!(options).split(':')
+            abil,action = *@input.request!(name, options).split(':')
             self.send(abil).send(action,self,@input)
           end
         end
@@ -237,5 +237,17 @@ module Online
       dodge! false
     end
   
+    def jsonify
+      {
+        'position' => @position,
+        'bases' => @bases.map(&:name),
+        'forms' => @forms.map(&:name),
+        'power' => power,
+        'range' => range.to_s,
+        'priority' => priority,
+        'stun_guard' => stun_guard,
+        'stun_immunity' => stun_immunity?
+      }
+    end
   end
 end

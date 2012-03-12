@@ -24,4 +24,19 @@ class Challenge < ActiveRecord::Base
   def load_game
     YAML.load(game_state)
   end
+  def player_name p
+    puts "I'm looking at #{p.id}"
+    puts "and my ids are #{player1_id} and #{player2_id}"
+    case p.id
+    when player1_id
+      return 'p1'
+    when player2_id
+      return 'p2'
+    else
+      nil
+    end
+  end
+  def pending_input p
+    load_game.pending_input player_name(p)
+  end
 end

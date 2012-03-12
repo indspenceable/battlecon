@@ -10,7 +10,7 @@ def recover_token
     when 1
       me.recover_token! me.spent_token_names.first
     else
-      me.recover_token! input.request!(me.spent_token_names)
+      me.recover_token! input.request!(me.name, me.spent_token_names)
     end
   end
 end
@@ -106,7 +106,7 @@ module Online
     end
     def ante
       if @active_tokens.empty? && @token_pool.any?
-        selection = @input.request!(token_pool_names + ['none'])
+        selection = @input.request!(name, (token_pool_names + ['none']))
         return false if selection == 'none'
         ante_token! selection
       end
