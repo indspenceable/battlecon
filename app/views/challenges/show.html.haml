@@ -1,13 +1,54 @@
 - content_for :header do
   %h1 View Challenge
 .box
-  %h2 Challenge bullshit
-  .stuff= @challenge.game_state
+  %h2 View Game!
+  .board
+    - 7.times do |x|
+      .space{:class => "position#{x}", :style => "border: 1px solid black; width: 50px; height: 50px; float: left;"}
+  .choices
+  %div{:style => "clear: both;"}
+.column
+  .box.p1
+.column
+  .box.p2
 
 :javascript
+  function setPlayer(name,location,data) {
+    var val = ""
+    val = val + "<p>Name: " + name + "</p>"
+    val = val + "<p>Forms: " + data.forms.join(', ') + "</p>"
+    val = val + "<p>Bases: " + data.bases.join(', ') + "</p>"
+    val = val + "<p>Current Power: " + data.power + "</p>"
+    val = val + "<p>Current Range: " + data.range + "</p>"
+    val = val + "<p>Current Priority: " + data.priority + "</p>"
+    val = val + "<p>Stun Guard: " + data.stun_guard + "</p>"
+    val = val + "<p>Stun immunity: " + data.stun_immunity + "</p>"
+    location.html(val)
+  }
+  function clearChoices() {
+    $('.choices').html('');
+  }
+    
+  function setChoices(choices) {
+    var val = ''
+    for(var i = 0; i < choices.length; i++) {
+      val += "<a href='#'>" + choices[i] + "</a> " 
+    }
+    $('.choices').html(val);
+    $('.choices a').click(function(){
+      inp($(this).text());
+    })
+  }
   function refreshStatus() {
     $.get('#{@challenge.id}.json', function(data) {
-      console.log(data);
+      setPlayer('p1',$('.p1'),data.p1)
+      setPlayer('p2',$('.p2'),data.p2)
+      console.log("Data is ", data)
+      if (data.pending_input) {
+        setChoices(data.pending_input);
+      } else {
+        clearChoices();
+      }
     })
   }
   function inp(x) {
@@ -19,3 +60,8 @@
       }
     })
   }
+  $(function(){
+    setInterval('refreshStatus();', 1000);
+  })
+  
+  refreshStatus();

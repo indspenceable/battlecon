@@ -233,6 +233,8 @@ module Online
       sum :stun_guard
     end
     def reset!
+      @base = nil
+      @form = nil
       unstun!
       dodge! false
     end
@@ -246,7 +248,8 @@ module Online
         'range' => range.to_s,
         'priority' => priority,
         'stun_guard' => stun_guard,
-        'stun_immunity' => stun_immunity?
+        'stun_immunity' => stun_immunity?,
+        'soak' => soak
       }
     end
   end
