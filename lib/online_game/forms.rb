@@ -1,5 +1,5 @@
 require File.join(File.dirname(__FILE__), 'attributes')
-module online
+module Online
   class Form < Attributes
     def source
       'form'

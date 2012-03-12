@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120223065155) do
+ActiveRecord::Schema.define(:version => 20120310234122) do
 
   create_table "cards", :force => true do |t|
     t.integer   "character_id"
@@ -21,6 +21,15 @@ ActiveRecord::Schema.define(:version => 20120223065155) do
     t.string    "other_text"
     t.timestamp "created_at",   :null => false
     t.timestamp "updated_at",   :null => false
+  end
+
+  create_table "challenges", :force => true do |t|
+    t.integer  "player1_id"
+    t.integer  "player2_id"
+    t.text     "game_state"
+    t.string   "status"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "characters", :force => true do |t|
@@ -100,13 +109,13 @@ ActiveRecord::Schema.define(:version => 20120223065155) do
   add_index "plays", ["player_id", "win"], :name => "index_on_play_player_id"
 
   create_table "strategy_posts", :force => true do |t|
-    t.integer  "primary_character_id",   :null => false
-    t.integer  "secondary_character_id"
-    t.integer  "creator_id",             :null => false
-    t.string   "title"
-    t.text     "text"
-    t.datetime "created_at",             :null => false
-    t.datetime "updated_at",             :null => false
+    t.integer   "primary_character_id",   :null => false
+    t.integer   "secondary_character_id"
+    t.integer   "creator_id",             :null => false
+    t.string    "title"
+    t.text      "text"
+    t.timestamp "created_at",             :null => false
+    t.timestamp "updated_at",             :null => false
   end
 
   add_index "strategy_posts", ["creator_id"], :name => "index_on_creator_id"

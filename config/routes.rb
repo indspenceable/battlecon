@@ -16,4 +16,8 @@ Battlecon::Application.routes.draw do
   post 'league/:id' => 'leagues#join', :as => :join_league
   match 'rankings(/:id)' => 'leagues#rankings', :as => :rankings
 
+  resources :challenges do
+    post '/' => 'challenges#update', :on => :member
+  end
+
 end

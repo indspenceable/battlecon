@@ -2,6 +2,19 @@ require File.join(File.dirname(__FILE__), 'tokens')
 require File.join(File.dirname(__FILE__), 'bases')
 require File.join(File.dirname(__FILE__), 'forms')
 require File.join(File.dirname(__FILE__), 'player')
+def recover_token
+  ->(me,input) do
+    case me.spent_token_names.count
+    when 0
+      puts "no tokens to recover."
+    when 1
+      me.recover_token! me.spent_token_names.first
+    else
+      me.recover_token! input.request!(me.spent_token_names)
+    end
+  end
+end
+
 module Online
   class Water < Token
     prop range: (-1..1)
@@ -14,19 +27,6 @@ module Online
   end
   class Earth < Token
     prop soak: 3
-  end
-
-  def recover_token
-    ->(me,input) do
-      case me.spent_token_names.count
-      when 0
-        puts "no tokens to recover."
-      when 1
-        me.recover_token! me.spent_token_names.first
-      else
-        me.recover_token! input.request!(me.spent_token_names)
-      end
-    end
   end
 
   class Trance < Form

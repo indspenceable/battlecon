@@ -12,7 +12,7 @@ module Online
         self.instance_variable_set(:"@#{trigger}", true)
       end
     end
-    [:reveal, :no_trigger :start_of_beat, :before_activation, :on_hit, :on_damage, :after_activation, :end_of_beat].each do |t|
+    [:reveal, :no_trigger, :start_of_beat, :before_activation, :on_hit, :on_damage, :after_activation, :end_of_beat].each do |t|
       define_method t do
         triggers = self.class.instance_variable_get(:@triggers) rescue nil
         if triggers && triggers[t]

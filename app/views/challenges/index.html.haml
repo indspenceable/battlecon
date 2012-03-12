@@ -1,0 +1,6 @@
+- content_for :header do
+  %h1 Challenges
+.box
+  %h2 Hello, there.
+  - @challenges.each do |c|
+    = link_to c.id, c

@@ -16,44 +16,40 @@ module Online
       @input_buffer = prev
     end
     def request! options
-      raise InputRequiredException.new(options.join(' ')) if @input_buffer.empty?
-      raise IncorrectAnswerException.new(options.join(' ')) unless options.include?(@input_buffer.first)
+      raise Online::InputRequiredException.new(options.join(' ')) if @input_buffer.empty?
+      raise Online::IncorrectAnswerException.new(options.join(' ')) unless options.include?(@input_buffer.first)
       @input_buffer.slice!(0)
     end
     def multi_request! hsh
       responses = {}
       2.times do
-        raise InputRequiredException.new("I need this input - #{hsh.inspect}") if @input_buffer.empty? 
+        raise Online::InputRequiredException.new("I need this input - #{hsh.inspect}") if @input_buffer.empty? 
         person,ans = *@input_buffer.slice!(0).split(':',2)
         person = person.to_sym
-        raise IncorrectAnswerException.new("Noone named #{person} was queried") unless hsh.key? person
-        raise IncorrectAnsewrException.new("Already got an answer for #{person}") if responses.key? person
-        raise IncorrectAnswerException.new("#{person} tried invalid option #{ans} out of #{hsh[person]}") unless hsh[person].include?(ans)
+        raise Online::IncorrectAnswerException.new("Noone named #{person} was queried") unless hsh.key? person
+        raise Online::IncorrectAnswerException.new("Already got an answer for #{person}") if responses.key? person
+        raise Online::IncorrectAnswerException.new("#{person} tried invalid option #{ans} out of #{hsh[person]}") unless hsh[person].include?(ans)
         responses[person] = ans
       end
       responses
-    end
-  
-    def request_attack_pairs!
-      pairs = {}
-      4.times do
-        raise InputRequiredException.new('Need attack pairs') if @input_buffer.empty? 
-        inp = @input_buffer.slice!(0)
-        pairs.[]=(*inp.split(':').map(&:to_sym))
-      end
-      pairs
     end
   end
 
   class Game
     def setup previous_inputs = []
+      @complete_input_list = previous_inputs.dup
       @input = InputFetcher.new(previous_inputs)
       @player1 = Cadenza.new @input, 1, 'p1'
       @player2 = Hikaru.new @input, 5, 'p2'
       @player1.opponent= @player2
       @player2.opponent= @player1
     end
-  
+    def inputs
+      @complete_input_list || []
+    end
+    
+    #TODO this shouldn't be rescuing exceptions, instead, it should be
+    # catching thrown symbols.
     def run previous_inputs
       setup previous_inputs
     
