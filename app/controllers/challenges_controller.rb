@@ -13,7 +13,7 @@ class ChallengesController < ApplicationController
     pl = @challenge.player_name active_player
     return render :json => {success: false, output: Challenge.find(params[:id]).load_game.inputs.join(', ')} unless pl
     if x = @challenge.submit_input!("#{pl}:#{params[:input]}")
-      render :json => {success: true, output: Challenge.find(params[:id]).load_game.inputs.join(', '), exception: x}
+      render :json => {success: true, game: @challenge.load_game.player_jsons.merge({:pending_input => @challenge.pending_input(active_player)})}
     else
       render :json => {success: false, output: Challenge.find(params[:id]).load_game.inputs.join(', ')}
     end

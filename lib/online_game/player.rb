@@ -244,6 +244,7 @@ module Online
         'position' => @position,
         'bases' => @bases.map(&:name),
         'forms' => @forms.map(&:name),
+        'life' => @life,
         'power' => power,
         'range' => range.to_s,
         'priority' => priority,

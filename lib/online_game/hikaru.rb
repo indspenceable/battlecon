@@ -43,7 +43,7 @@ module Online
   class Geomantic < Form
     prop range: 0, power: 1, priority: 0
     at :start_of_beat, :ante_again, ->(me, input) do
-      me.ante
+      me.ante_choice
     end
   end
   class Sweeping < Form
@@ -104,11 +104,14 @@ module Online
       @token_pool.delete token
       puts "Selected #{token.name}"
     end
+    def ante_choice
+      selection = @input.request!(name, (token_pool_names + ['none']))
+      return false if selection == 'none'
+      ante_token! selection
+    end
     def ante
       if @active_tokens.empty? && @token_pool.any?
-        selection = @input.request!(name, (token_pool_names + ['none']))
-        return false if selection == 'none'
-        ante_token! selection
+        ante_choice
       end
     end
     def unante!

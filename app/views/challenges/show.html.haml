@@ -16,14 +16,17 @@
   function setPlayer(name,location,data) {
     var val = ""
     val = val + "<p>Name: " + name + "</p>"
+    val = val + "<p>Life: " + data.life + "</p>"
     val = val + "<p>Forms: " + data.forms.join(', ') + "</p>"
     val = val + "<p>Bases: " + data.bases.join(', ') + "</p>"
     val = val + "<p>Current Power: " + data.power + "</p>"
     val = val + "<p>Current Range: " + data.range + "</p>"
     val = val + "<p>Current Priority: " + data.priority + "</p>"
     val = val + "<p>Stun Guard: " + data.stun_guard + "</p>"
+    val = val + "<p>Soak: " + data.soak + "</p>"
     val = val + "<p>Stun immunity: " + data.stun_immunity + "</p>"
     location.html(val)
+    $('.board .position' + data.position).text(name)
   }
   function clearChoices() {
     $('.choices').html('');
@@ -39,24 +42,26 @@
       inp($(this).text());
     })
   }
+  function loadData(data) {
+    $('.board .space').text('')
+    setPlayer('p1',$('.p1'),data.p1)
+    setPlayer('p2',$('.p2'),data.p2)
+    if (data.pending_input) {
+      setChoices(data.pending_input);
+    } else {
+      clearChoices();
+    }
+  }
   function refreshStatus() {
-    $.get('#{@challenge.id}.json', function(data) {
-      setPlayer('p1',$('.p1'),data.p1)
-      setPlayer('p2',$('.p2'),data.p2)
-      console.log("Data is ", data)
-      if (data.pending_input) {
-        setChoices(data.pending_input);
-      } else {
-        clearChoices();
-      }
-    })
+    $.get('#{@challenge.id}.json', loadData)
   }
   function inp(x) {
+    console.log("POSTING...");
     $.post(''
     , {input: x}
     , function(data){ 
       if (data.success) {
-        $('.stuff').html(data.output + "<br/>" + data.exception)
+        loadData(data.game);
       }
     })
   }
