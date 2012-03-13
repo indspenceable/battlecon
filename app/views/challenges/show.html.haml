@@ -2,15 +2,15 @@
   %h1 View Challenge
 .box
   %h2 View Game!
-  .board
+  .board{:style => "width: 365px; margin: auto"}
     - 7.times do |x|
       .space{:class => "position#{x}", :style => "border: 1px solid black; width: 50px; height: 50px; float: left;"}
-  .choices
   %div{:style => "clear: both;"}
+  .choices{:style => "width: 50%;"}
 .column
-  .box.p1
+  .box.p1.character
 .column
-  .box.p2
+  .box.p2.character
 
 :javascript
   var interval;
@@ -52,8 +52,10 @@
     } else {
       clearChoices();
     }
-    if (data.state == 'finished') {
+    if (data.winner) {
       console.log("Finished game.")
+      $('.' + data.winner).addClass('winner').prepend("<h2>Winner!<h2>")
+      $('.character:not(.winner)').prepend("<h2>Loser!<h2>")
       clearInterval(interval);
     } 
   }

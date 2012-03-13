@@ -81,7 +81,7 @@ module Online
       {
         'p1' => @player1.jsonify, 
         'p2' => @player2.jsonify,
-        'state' => state
+        'winner' => (@winner ? @winner.name : nil)
       }
     end
     
