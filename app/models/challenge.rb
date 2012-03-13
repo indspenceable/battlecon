@@ -24,6 +24,9 @@ class Challenge < ActiveRecord::Base
   def load_game
     YAML.load(game_state)
   end
+  def re_run
+    Online::Game.new.run load_game.inputs
+  end
   def player_name p
     puts "I'm looking at #{p.id}"
     puts "and my ids are #{player1_id} and #{player2_id}"
