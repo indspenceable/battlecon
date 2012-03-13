@@ -3,88 +3,125 @@ require File.join(File.dirname(__FILE__), 'hikaru')
 
 require 'yaml'
 module Online
-  class InputRequiredException < RuntimeError;end
-  class IncorrectAnswerException < RuntimeError;end
-  class GameWonException < RuntimeError
-    def initialize p
-      super("#{p.name} won!")
-    end
-  end
-
   class InputFetcher
+    attr_reader :issue, :message, :successful_input
     def initialize prev
       @input_buffer = prev
       @pending_input = {}
+      @successful_input = []
+      @issue = :none
+      @message = nil
     end
+    def input_required x
+      @issue,@message = :input_required, x
+      throw :input_required
+    end
+    def incorrect_answer x
+      @issue,@message = :incorrect_answer, x
+      #throw :incorrect_answer
+      #We should maybe throw an error in this case.
+    end
+    
     def request! name,options
+      puts "GOT A REQUEST #{name} #{options}"
       @pending_input[name] = options
-      raise Online::InputRequiredException.new(options.map{|o| "#{name}:#{o}"}.join(' ')) if @input_buffer.empty?
-      me,option = @input_buffer.slice!(0).split(':',2)
-      raise Online::IncorrectAnswerException.new(options.map{|o| "#{name}:#{o}"}.join(' ')) unless options.include?(option)
+      
+      input_required(options.map{|o| "#{name}:#{o}"}.join(' ')) if @input_buffer.empty?
+      
+      me,option = @input_buffer.first.split(':',2)
+      
+      incorrect_answer(options.map{|o| "#{name}:#{o}"}.join(' ')) unless options.include?(option)
+      
       @pending_input.delete(name)
+      @successful_input << @input_buffer.slice!(0)
       option
     end
     def multi_request! hsh
       responses = {}
       @pending_input = hsh.dup
       hsh.keys.count.times do
-        raise Online::InputRequiredException.new("I need this input - #{hsh.reject{|k,v| responses.key? k}.inspect}") if @input_buffer.empty? 
-        person,ans = *@input_buffer.slice!(0).split(':',2)
-        raise Online::IncorrectAnswerException.new("Noone named #{person} was queried") unless hsh.key? person
-        raise Online::IncorrectAnswerException.new("Already got an answer for #{person}") if responses.key? person
-        raise Online::IncorrectAnswerException.new("#{person} tried invalid option #{ans} out of #{hsh[person]}") unless hsh[person].include?(ans)
+        input_required("I need this input - #{hsh.reject{|k,v| responses.key? k}.inspect}") if @input_buffer.empty? 
+        
+        person,ans = @input_buffer.first.split(':',2)
+        
+        incorrect_answer("Noone named #{person} was queried") unless hsh.key? person
+        incorrect_answer("Already got an answer for #{person}") if responses.key? person
+        incorrect_answer("#{person} tried invalid option #{ans} out of #{hsh[person]}") unless hsh[person].include?(ans)
+        
         @pending_input.delete person
+        @successful_input << @input_buffer.slice!(0)
         responses[person] = ans
       end
       responses
     end
     def pending
-      puts "PENDING INPUT"
       (@pending_input||{})
+    end
+    def successful
+      @successful_input
     end
   end
 
   class Game
     def setup previous_inputs = []
-      @complete_input_list = previous_inputs.dup
       @input = InputFetcher.new(previous_inputs)
       @player1 = Cadenza.new @input, 1, 'p1'
       @player2 = Hikaru.new @input, 5, 'p2'
       @player1.opponent= @player2
       @player2.opponent= @player1
+      @winner = nil
     end
-    def inputs
-      @complete_input_list || []
+    def successful_inputs
+      @input.successful_input
     end
     def pending_input n
       @input.pending[n]
     end
     def player_jsons
-      puts "Got the jsons"
-      return {'p1' => @player1.jsonify, 'p2' => @player2.jsonify}
+      {
+        'p1' => @player1.jsonify, 
+        'p2' => @player2.jsonify,
+        'state' => state
+      }
+    end
+    
+    def state
+      if @winner
+        :finished
+      else
+        @input.issue
+      end
+    end
+    def message
+      @input.message
     end
     
     #TODO this shouldn't be rescuing exceptions, instead, it should be
     # catching thrown symbols.
     def run previous_inputs
       setup previous_inputs
-    
-      15.times do |x|
-        puts "-----------------------------"
-        puts "Beat ##{x+1}"
-        puts "Player one is at #{@player1.position} (#{@player1.life} / 20)"
-        puts "Player two is at #{@player2.position} (#{@player2.life} / 20)"
-        beat
+      catch :input_required do
+        catch :ko do
+          15.times do |x|
+            puts "-----------------------------"
+            puts "Beat ##{x+1}"
+            puts "Player one is at #{@player1.position} (#{@player1.life} / 20)"
+            puts "Player two is at #{@player2.position} (#{@player2.life} / 20)"
+            beat
+          end
+          puts "Life is #{@player1.life} vs #{@player2.life}"
+        end
+        # Caught a KO, or played through the whole game.
+        case @player1.life <=> @player2.life
+        when 1
+          @winner = @player1
+        when 0
+          @winner = :tie
+        else
+          @winner = @player2
+        end
       end
-      puts "Life is #{@player1.life} vs #{@player2.life}"
-      case @player1.life <=> @player2.life
-      when 1
-        raise GameWonException.new(@player1)
-      when 0
-        raise :lol
-      else
-        raise GameWonException.new(@player2)
-      end
+      return self
     end
   
     def beat

@@ -119,7 +119,7 @@ module Online
     end
   
     def hits?
-      in_range? unless @opponent.dodged?
+      in_range? unless @opponent.dodged? if power
     end
   
     def distance
@@ -179,7 +179,7 @@ module Online
       opponent.advance! n
     end
     def power
-      sum(:power)
+      sum(:power) rescue nil
     end
     def deal_damage
       opponent.take_damage! power
@@ -192,7 +192,8 @@ module Online
     def take_damage! damage
       adjusted_damage = determine_damage damage
       @life -= adjusted_damage
-      raise GameWonException.new(opponent) if @life <= 0
+      #raise GameWonException.new(opponent) if @life <= 0
+      throw :ko if @life <= 0
       if stuns? adjusted_damage
         stun!
       end

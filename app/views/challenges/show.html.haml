@@ -13,6 +13,7 @@
   .box.p2
 
 :javascript
+  var interval;
   function setPlayer(name,location,data) {
     var val = ""
     val = val + "<p>Name: " + name + "</p>"
@@ -51,6 +52,10 @@
     } else {
       clearChoices();
     }
+    if (data.state == 'finished') {
+      console.log("Finished game.")
+      clearInterval(interval);
+    } 
   }
   function refreshStatus() {
     $.get('#{@challenge.id}.json', loadData)
@@ -66,7 +71,6 @@
     })
   }
   $(function(){
-    setInterval('refreshStatus();', 1000);
+    interval = setInterval('refreshStatus();', 1000);
+    refreshStatus();
   })
-  
-  refreshStatus();

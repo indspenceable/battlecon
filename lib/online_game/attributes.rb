@@ -42,11 +42,10 @@ module Online
           valid_options[method] = options.select{|e| me.send(confirm, e)}
         end
         valid_options.delete_if{|k,v| v.empty?}
-        count_of_valid_options = valid_options.values.map(&:size).inject(&:+)
-
+        count_of_valid_options = valid_options.values.map(&:size).inject(0,&:+)
         case count_of_valid_options
         when 0
-          puts "Not possible to do #{method} with any of #{methods_to_option.inspect}."
+          puts "Not possible to do any of #{methods_to_options}."
         when 1
           method,arg = *valid_options.first
           arg = arg[0]
