@@ -9,7 +9,6 @@ module Online
       @priority = p
     end
     def priority
-      puts "Adding priority from the +4 priority token."
       @priority
     end
   end

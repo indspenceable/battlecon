@@ -45,15 +45,15 @@ module Online
         count_of_valid_options = valid_options.values.map(&:size).inject(0,&:+)
         case count_of_valid_options
         when 0
-          puts "Not possible to do any of #{methods_to_options}."
+          me.output "Not possible for #{me.name} to do any of #{methods_to_options}."
         when 1
           method,arg = *valid_options.first
           arg = arg[0]
-          puts "Doing: #{method} -> #{arg}"
+          me.output "#{me.name} Doing: #{method} -> #{arg}"
           me.send(:"#{valid_options.first.first}!", valid_options.first.last.first)
         else
           method,arg = *input.request!(me.name, valid_options.map{|k,v| v.map{|i| "#{k}:#{i}"}}.flatten).split(':')
-          puts "Doing: #{method} -> #{arg}"
+          me.output "#{me.name} Doing: #{method} -> #{arg}"
           me.send(:"#{method}!", arg.to_i)
         end
       end

@@ -6,11 +6,14 @@ def recover_token
   ->(me,input) do
     case me.spent_token_names.count
     when 0
-      puts "no tokens to recover."
+      me.output "No tokens for #{me.name} recover."
     when 1
+      me.output("Hikaru #{me.name} recovered token #{me.spent_token_names.first}")
       me.recover_token! me.spent_token_names.first
     else
-      me.recover_token! input.request!(me.name, me.spent_token_names)
+      inp = input.request!(me.name, me.spent_token_names)
+      me.output("Hikaru #{me.name} recovered token #{inp}")
+      me.recover_token! inp
     end
   end
 end
@@ -97,12 +100,10 @@ module Online
       @active_tokens
     end
     def ante_token! token_name
-      puts "Trying to ante #{token_name}"
       token = @token_pool.find{|f| f.name == token_name}
-      puts "Found #{token}"
       @active_tokens << token
       @token_pool.delete token
-      puts "Selected #{token.name}"
+      output "Hikaru (#{name}) antes #{token_name}"
     end
     def ante_choice
       selection = @input.request!(name, (token_pool_names + ['none']))

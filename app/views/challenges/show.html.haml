@@ -11,9 +11,22 @@
   .box.p1.character
 .column
   .box.p2.character
+.box.log{:style => "clear: both;"}
+
+  
 
 :javascript
   var interval;
+  var statements = 0;
+  
+  function setLog(log) {
+    $log = $('.log')
+    for (var i = 0; i < log.length; i +=1 ) {
+      $log.prepend("<p>" + log[i] + "</p>");
+      statements += 1;
+    }
+  }
+  
   function setPlayer(name,location,data) {
     var val = ""
     val = val + "<p>Name: " + name + "</p>"
@@ -45,8 +58,12 @@
   }
   function loadData(data) {
     $('.board .space').text('')
-    setPlayer('p1',$('.p1'),data.p1)
-    setPlayer('p2',$('.p2'),data.p2)
+    if (data.p1) {
+      setPlayer('p1',$('.p1'),data.p1)
+      setPlayer('p2',$('.p2'),data.p2)
+    }
+    //console.log(data);
+    setLog(data.log);
     if (data.pending_input) {
       setChoices(data.pending_input);
     } else {
@@ -60,7 +77,7 @@
     } 
   }
   function refreshStatus() {
-    $.get('#{@challenge.id}.json', loadData)
+    $.get('#{@challenge.id}.json', {log: statements}, loadData)
   }
   function inp(x) {
     console.log("POSTING...");

@@ -32,7 +32,7 @@ module Online
       select_from(advance:[1,2,3], retreat:[1,2,3]).call(me,input)
       unless initial_direction == me.direction
         me.dodge!
-        puts "#{me.name} dodged attacks by switching sides!"
+        me.output "#{me.name} dodged attacks by switching sides!"
       end
     end
   end

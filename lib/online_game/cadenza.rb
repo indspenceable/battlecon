@@ -70,17 +70,17 @@ module Online
       end
     end
     def gather_power!
-      puts "GATHERING POWER FOR PRESS"
+      output ("Cadenza (#{name}) is gathering power for press.")
       @gathering_power_for_press = 0
     end
 
     def take_damage! damage
       d = super
-      @gathering_power_for_press += d  and puts "MORE POWER" if @gathering_power_for_press
+      @gathering_power_for_press += d  and output "Cadenza (#{name}) gathered #{d} damage." if @gathering_power_for_press
       d
     end
     def power
-      (@gathering_power_for_press || 0) + super
+      (@gathering_power_for_press || 0) + super rescue nil
     end
 
     # Cadenza's main ability is that whenever he would get stunned,

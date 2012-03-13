@@ -23,7 +23,6 @@ module Online
     end
     
     def request! name,options
-      puts "GOT A REQUEST #{name} #{options}"
       @pending_input[name] = options
       
       input_required(options.map{|o| "#{name}:#{o}"}.join(' ')) if @input_buffer.empty?
@@ -63,10 +62,33 @@ module Online
   end
 
   class Game
+    def character_names
+      %w(hikaru cadenza)
+    end
+    def character_klass
+      {
+      'hikaru' => Hikaru,
+      'cadenza' => Cadenza
+      }
+    end
+    
+    def output str
+      @output << str
+    end
+    
+    
     def setup previous_inputs = []
       @input = InputFetcher.new(previous_inputs)
-      @player1 = Cadenza.new @input, 1, 'p1'
-      @player2 = Hikaru.new @input, 5, 'p2'
+      @output = []
+      cs = @input.multi_request!('p1' => character_names, 'p2' => character_names)
+      output "Player one is playing as #{cs['p1']}"
+      output "Player two is playing as #{cs['p2']}"
+      
+      @player1 = character_klass[cs['p1']].new @input, 1, 'p1', @output
+      @player2 = character_klass[cs['p2']].new @input, 5, 'p2', @output
+      
+      # @player1 = Cadenza.new @input, 1, 'p1'
+      # @player2 = Hikaru.new @input, 5, 'p2'
       @player1.opponent= @player2
       @player2.opponent= @player1
       @winner = nil
@@ -77,12 +99,18 @@ module Online
     def pending_input n
       @input.pending[n]
     end
-    def player_jsons
-      {
-        'p1' => @player1.jsonify, 
-        'p2' => @player2.jsonify,
-        'winner' => (@winner ? @winner.name : nil)
-      }
+    def player_jsons n=0
+      out = @output.last(@output.size - n) rescue []
+      if @player1
+        {
+          'p1' => @player1.jsonify, 
+          'p2' => @player2.jsonify,
+          'winner' => (@winner ? @winner.name : nil),
+          'log' => out
+        }
+      else
+        {'winner' => nil, 'log' => out}
+      end
     end
     
     def state
@@ -99,17 +127,17 @@ module Online
     #TODO this shouldn't be rescuing exceptions, instead, it should be
     # catching thrown symbols.
     def run previous_inputs
-      setup previous_inputs
       catch :input_required do
+        setup previous_inputs
         catch :ko do
           15.times do |x|
-            puts "-----------------------------"
-            puts "Beat ##{x+1}"
-            puts "Player one is at #{@player1.position} (#{@player1.life} / 20)"
-            puts "Player two is at #{@player2.position} (#{@player2.life} / 20)"
+            output "Welcome to beat ##{x+1}"
+            output "Player one is at #{@player1.position} (#{@player1.life} / 20)"
+            output "Player two is at #{@player2.position} (#{@player2.life} / 20)"
+            output "Life is #{@player1.life} vs #{@player2.life}"
+            
             beat
           end
-          puts "Life is #{@player1.life} vs #{@player2.life}"
         end
         # Caught a KO, or played through the whole game.
         case @player1.life <=> @player2.life
@@ -147,6 +175,8 @@ module Online
       # @player1.attack_pair!(pairs[:p1b], pairs[:p1f])
       # @player2.attack_pair!(pairs[:p2b], pairs[:p2f])
       pairs = @input.multi_request!('p1' => @player1.possible_attack_pairs, 'p2' => @player2.possible_attack_pairs)
+      output "Player one selected attack pair: #{pairs['p1'].gsub(':',' ')}"
+      output "Player two selected attack pair: #{pairs['p2'].gsub(':',' ')}"
       @player1.attack_pair!(*pairs['p1'].split(':'))
       @player2.attack_pair!(*pairs['p2'].split(':'))
     end
@@ -155,7 +185,6 @@ module Online
       p,c = true,true
       cp,op = @player1,@player2
       loop do
-        puts "ANTE PHASE"
         p = c
         c = cp.ante
         cp,op = op,cp
@@ -174,7 +203,7 @@ module Online
 
     def resolve_clash
       while @player1.priority == @player2.priority
-        puts "****** CLASH at #{@player1.priority} Priority! ******"
+        output "****** CLASH at #{@player1.priority} Priority! ******"
         @player1.clash!
         @player2.clash!
         # both should select new bases
@@ -195,13 +224,13 @@ module Online
       @reactive.start_of_beat!
     end
     def activate activator
-      puts "#{activator.name} is activating #{activator.base.class.name}"
+      output "#{activator.name} is activating #{activator.base.class.name}"
       activator.before_activation!
       if activator.hits?
-        puts "it's in range!"
+        output "it's in range!"
         activator.on_hit!
         if activator.deal_damage > 0
-          puts "and it dealt damage!"
+          output "and it dealt damage!"
           activator.on_damage!
         end
       end

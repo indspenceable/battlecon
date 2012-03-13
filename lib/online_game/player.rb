@@ -9,10 +9,14 @@ module Online
       @bases.map(&:name)
     end
     attr_accessor :opponent
-    def initialize(input, position,name)
+    def output x
+      @output << x 
+    end
+    def initialize(input, position,name,out)
       @name = name
       @position = position
       @life = 20
+      @output = out
     
       @bases = [
         Strike.new,
@@ -144,8 +148,13 @@ module Online
     end
   
     def advance? n
-      (position < 5 || (@opponent.position != 6)) &&
-      (position > 1 || (@opponent.position != 0))
+      # (position < 5 || (@opponent.position != 6)) &&
+      #       (position > 1 || (@opponent.position != 0))
+      if direction == 1
+        position + n + 1 <= 6
+      else
+        position - n -1 >= 0
+      end
     end
     def retreat? n
       (0..6).include? @position - n*direction
