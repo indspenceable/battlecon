@@ -18,6 +18,7 @@ module Online
     end
     def incorrect_answer x
       @issue,@message = :incorrect_answer, x
+      raise x
       #throw :incorrect_answer
       #We should maybe throw an error in this case.
     end
