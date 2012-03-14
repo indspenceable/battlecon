@@ -107,10 +107,11 @@ module Online
           'p1' => @player1.jsonify, 
           'p2' => @player2.jsonify,
           'winner' => (@winner ? @winner.name : nil),
-          'log' => out
+          'log' => out,
+          'number' => successful_inputs.count
         }
       else
-        {'winner' => nil, 'log' => out}
+        {'winner' => nil, 'log' => out, 'number' => 0}
       end
     end
     
@@ -155,8 +156,8 @@ module Online
   
     def beat
       reset
-      planning
-      ante
+      planning_and_ante
+      #ante
       reveal
       resolve_clash
       no_trigger
@@ -172,10 +173,11 @@ module Online
       @player2.reset!  
     end
     def planning
-      # pairs = @input.request_attack_pairs!
-      # @player1.attack_pair!(pairs[:p1b], pairs[:p1f])
-      # @player2.attack_pair!(pairs[:p2b], pairs[:p2f])
       pairs = @input.multi_request!('p1' => @player1.possible_attack_pairs, 'p2' => @player2.possible_attack_pairs)
+      output "Both players have selected attack pairs..."
+      
+      ante
+      
       output "Player one selected attack pair: #{pairs['p1'].gsub(':',' ')}"
       output "Player two selected attack pair: #{pairs['p2'].gsub(':',' ')}"
       @player1.attack_pair!(*pairs['p1'].split(':'))
@@ -189,7 +191,7 @@ module Online
         p = c
         c = cp.ante
         cp,op = op,cp
-        return unless (p || c)
+        break unless (p || c)
       end
     end
 

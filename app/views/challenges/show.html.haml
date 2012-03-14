@@ -8,16 +8,20 @@
   %div{:style => "clear: both;"}
   .choices{:style => "width: 50%;"}
 .column
-  .box.p1.character
+  .box.p1.player
+    .pair
+    .character
 .column
-  .box.p2.character
+  .box.p2.player
+    .pair
+    .character
 .box.log{:style => "clear: both;"}
-
-  
+.img-cache{:style => "display: none;"}
 
 :javascript
   var interval;
   var statements = 0;
+  var prevData = {}
   
   function setLog(log) {
     $log = $('.log')
@@ -25,6 +29,15 @@
       $log.prepend("<p>" + log[i] + "</p>");
       statements += 1;
     }
+  }
+  
+  function imgElementFor(imgName) {
+    img = $('img .card.' + imgName)
+    if (img.length == 0) {
+      img = $("<img src='/assets/cards/" + imgName + ".png' class='card " + imgName + "'></img>")
+      img.appendTo($('.img-cache'));
+    }
+    return img;
   }
   
   function setPlayer(name,location,data) {
@@ -39,7 +52,19 @@
     val = val + "<p>Stun Guard: " + data.stun_guard + "</p>"
     val = val + "<p>Soak: " + data.soak + "</p>"
     val = val + "<p>Stun immunity: " + data.stun_immunity + "</p>"
-    location.html(val)
+    location.find('.character').html(val)
+
+    if (data.base) {
+      $pair = location.find('.pair')
+      $pair.find('img').detach().appendTo('.img-cache')
+      // This should, instead, see if we have an element for that base
+      imgElementFor(data.form).detach().appendTo($pair)
+      imgElementFor(data.base).detach().appendTo($pair)
+      
+      var base_image = "<img src='/assets/cards/" + data.base + ".png' class='card'></img>"
+      var form_image = "<img src='/assets/cards/" + data.form + ".png' class='card'></img>"
+      location.find('.pair').html(form_image + base_image);
+    }
     $('.board .position' + data.position).text(name)
   }
   function clearChoices() {
@@ -57,24 +82,27 @@
     })
   }
   function loadData(data) {
-    $('.board .space').text('')
-    if (data.p1) {
-      setPlayer('p1',$('.p1'),data.p1)
-      setPlayer('p2',$('.p2'),data.p2)
+    if (data.number != prevData.number){
+      $('.board .space').text('')
+      if (data.p1) {
+        setPlayer('p1',$('.p1'),data.p1)
+        setPlayer('p2',$('.p2'),data.p2)
+      }
+      //console.log(data);
+      setLog(data.log);
+      if (data.pending_input) {
+        setChoices(data.pending_input);
+      } else {
+        clearChoices();
+      }
+      if (data.winner) {
+        console.log("Finished game.")
+        $('.' + data.winner).addClass('winner').prepend("<h2>Winner!<h2>")
+        $('.player:not(.winner)').prepend("<h2>Loser!<h2>")
+        clearInterval(interval);
+      } 
+      prevData = data
     }
-    //console.log(data);
-    setLog(data.log);
-    if (data.pending_input) {
-      setChoices(data.pending_input);
-    } else {
-      clearChoices();
-    }
-    if (data.winner) {
-      console.log("Finished game.")
-      $('.' + data.winner).addClass('winner').prepend("<h2>Winner!<h2>")
-      $('.character:not(.winner)').prepend("<h2>Loser!<h2>")
-      clearInterval(interval);
-    } 
   }
   function refreshStatus() {
     $.get('#{@challenge.id}.json', {log: statements}, loadData)

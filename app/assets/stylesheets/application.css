@@ -93,6 +93,9 @@ h2{
   text-align: center;
 }
 
+.card {
+  width:50%;
+}
 .box {
   border-radius: 3px;
   border: 1px solid black;
