@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'online_game/game.rb'
 
 describe "Randomly Played online games" do
-  500.times do |x|
+  50.times do |x|
     it "Should keep playing without raising errors. Game #{x}" do
       begin
         g = Online::Game.new.run []

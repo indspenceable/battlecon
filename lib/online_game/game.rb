@@ -172,7 +172,7 @@ module Online
       @player1.reset!
       @player2.reset!  
     end
-    def planning
+    def planning_and_ante
       pairs = @input.multi_request!('p1' => @player1.possible_attack_pairs, 'p2' => @player2.possible_attack_pairs)
       output "Both players have selected attack pairs..."
       
