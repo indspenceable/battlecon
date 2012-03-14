@@ -1,6 +1,12 @@
 - content_for :header do
   %h1 Challenges
 .box
-  %h2 Hello, there.
-  - @challenges.each do |c|
+  %h2 Current Challenges
+  - @challenges.belonging_to(active_player).each do |c|
     = link_to c.id, c
+.box
+  %h2 New Challenge
+  = form_for Challenge.new do |f|
+    = f.hidden_field :player1_id, :value => active_player.id
+    = f.text_field :player2_name
+    = f.submit

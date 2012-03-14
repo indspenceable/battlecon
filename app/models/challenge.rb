@@ -1,5 +1,18 @@
 require 'online_game/game.rb'
 class Challenge < ActiveRecord::Base
+  scope :belonging_to, ->(pl){where('player1_id = ? OR player2_id = ?', pl.id, pl.id)}
+  
+  attr_accessor :player2_name
+  
+  before_create do
+    if player2_name
+      self.player2_id = Player.where(:name => player2_name).first.id
+    end
+    self.status = 'pending'
+    self.game_state = YAML.dump(Online::Game.new.run([]))
+  end
+  
+  
   def submit_input! input
     #TODO - game.inputs()
     inputs = load_game.successful_inputs

@@ -1,6 +1,6 @@
 class ChallengesController < ApplicationController
   def index
-    @challenges = Challenge.all
+    @challenges = Challenge
   end
   def show
     @challenge = Challenge.find(params[:id])
@@ -18,5 +18,13 @@ class ChallengesController < ApplicationController
     g = @challenge.submit_input!("#{pl}:#{params[:input]}")
     render :json => {success: true, game: @challenge.load_game.player_jsons(params[:log].to_i).merge({:pending_input => @challenge.pending_input(active_player)})}
       #render :json => {success: false, output: Challenge.find(params[:id]).load_game.successful_inputs.join(', ')}
+  end
+  def create
+    c = Challenge.new(params[:challenge])
+    if c.save
+      redirect_to c
+    else
+      flash[:error] = "Couldn't make challenge"
+    end
   end
 end
