@@ -88,8 +88,6 @@ module Online
       @player1 = character_klass[cs['p1']].new @input, 1, 'p1', @output
       @player2 = character_klass[cs['p2']].new @input, 5, 'p2', @output
       
-      # @player1 = Cadenza.new @input, 1, 'p1'
-      # @player2 = Hikaru.new @input, 5, 'p2'
       @player1.opponent= @player2
       @player2.opponent= @player1
       @winner = nil
@@ -100,14 +98,13 @@ module Online
     def pending_input n
       @input.pending[n]
     end
-    def player_jsons n=0
-      out = @output.last(@output.size - n) rescue []
+    def player_jsons
       if @player1
         {
           'p1' => @player1.jsonify, 
           'p2' => @player2.jsonify,
           'winner' => (@winner ? @winner.name : nil),
-          'log' => out,
+          'log' => @output.reverse,
           'number' => successful_inputs.count
         }
       else

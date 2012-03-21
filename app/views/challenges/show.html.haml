@@ -6,7 +6,7 @@
     - 7.times do |x|
       .space{:class => "position#{x}", :style => "border: 1px solid black; width: 50px; height: 50px; float: left;"}
   %div{:style => "clear: both;"}
-  .choices{:style => "width: 50%;"}
+  .choices{:style => "width: 75%; margin:auto"}
 .column
   .box.p1.player
     .pair
@@ -24,11 +24,7 @@
   var prevData = {}
   
   function setLog(log) {
-    $log = $('.log')
-    for (var i = 0; i < log.length; i +=1 ) {
-      $log.prepend("<p>" + log[i] + "</p>");
-      statements += 1;
-    }
+    $log = $('.log').html("<p>" + log.join("</p><p>") + "</p>")
   }
   
   function imgElementFor(imgName) {
@@ -40,12 +36,28 @@
     return img;
   }
   
+  function imageFor(n) {
+    return "<img src='/assets/cards/" + n + ".png' class='card'></img>"
+  }
+  
   function setPlayer(name,location,data) {
     var val = ""
     val = val + "<p>Name: " + name + "</p>"
     val = val + "<p>Life: " + data.life + "</p>"
-    val = val + "<p>Forms: " + data.forms.join(', ') + "</p>"
-    val = val + "<p>Bases: " + data.bases.join(', ') + "</p>"
+    
+    val = val + "<p>Forms:"
+    for (var i = 0; i < data.forms.length; i+=1) {
+      val = val + "<span class='hoverable'>" + data.forms[i] + " <span class='hover'>" + imageFor(data.forms[i]) + "</span></span>"
+    }
+    val = val + "</p>"
+    
+    val = val + "<p>Bases:"
+    for (var i = 0; i < data.bases.length; i+=1) {
+      val = val + "<span class='hoverable'>" + data.bases[i] + " <span class='hover'>" + imageFor(data.bases[i]) + "</span></span>"
+    }
+    val = val + "</p>"
+    
+    
     val = val + "<p>Current Power: " + data.power + "</p>"
     val = val + "<p>Current Range: " + data.range + "</p>"
     val = val + "<p>Current Priority: " + data.priority + "</p>"
@@ -56,15 +68,19 @@
 
     if (data.base) {
       $pair = location.find('.pair')
+      $pair.show();
       $pair.find('img').detach().appendTo('.img-cache')
       // This should, instead, see if we have an element for that base
       imgElementFor(data.form).detach().appendTo($pair)
       imgElementFor(data.base).detach().appendTo($pair)
       
-      var base_image = "<img src='/assets/cards/" + data.base + ".png' class='card'></img>"
-      var form_image = "<img src='/assets/cards/" + data.form + ".png' class='card'></img>"
+      var base_image = imageFor(data.base)
+      var form_image = imageFor(data.form)
       location.find('.pair').html(form_image + base_image);
+    } else {
+      location.find('.pair').hide();
     }
+    
     $('.board .position' + data.position).text(name)
   }
   function clearChoices() {
@@ -88,7 +104,6 @@
         setPlayer('p1',$('.p1'),data.p1)
         setPlayer('p2',$('.p2'),data.p2)
       }
-      //console.log(data);
       setLog(data.log);
       if (data.pending_input) {
         setChoices(data.pending_input);

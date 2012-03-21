@@ -32,6 +32,7 @@ module Online
       @input = input
       @used_bases = []
     end
+    
     def ante
       #By default, nothing happens during ante
     end

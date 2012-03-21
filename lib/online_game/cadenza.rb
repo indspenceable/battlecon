@@ -65,7 +65,11 @@ module Online
         if @input.request!(name, ['iron_body','pass']) == 'iron_body'
           @active_tokens << IronBody.new
           @iron_body_token_count -= 1
+          output "#{name} antes an iron body token (#{@iron_body_token_count} left)."
           true
+        else
+          output "#{name} passes the ante."
+          false
         end
       end
     end
