@@ -108,7 +108,7 @@ module Online
             abil,action = *options[0].split(':')
             self.send(abil).send(action,self,@input)
           else
-            abil,action = *@input.request!(name, options).split(':')
+            abil,action = *@input.request!('select-current-ability', name, options).split(':')
             self.send(abil).send(action,self,@input)
           end
         end

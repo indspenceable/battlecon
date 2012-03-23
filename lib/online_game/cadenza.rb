@@ -62,7 +62,7 @@ module Online
       @gathering_power_for_press = false
       return false if @active_tokens.any?{|t| t.is_a? IronBody }
       if @iron_body_token_count > 0
-        if @input.request!(name, ['iron_body','pass']) == 'iron_body'
+        if @input.request!('token-select', name, ['iron_body','pass']) == 'iron_body'
           @active_tokens << IronBody.new
           @iron_body_token_count -= 1
           output "#{name} antes an iron body token (#{@iron_body_token_count} left)."
@@ -92,7 +92,7 @@ module Online
     def stuns? damage
       if super && !@iron_body
         if @iron_body_token_count > 0
-          if @input.request!(name, ['iron_body','pass']) == 'iron_body'
+          if @input.request!('token-select', name, ['iron_body','pass']) == 'iron_body'
             @iron_body = true
             @iron_body_token_count -= 1
             return false

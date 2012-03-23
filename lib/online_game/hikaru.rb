@@ -11,7 +11,7 @@ def recover_token
       me.output("Hikaru #{me.name} recovered token #{me.spent_token_names.first}")
       me.recover_token! me.spent_token_names.first
     else
-      inp = input.request!(me.name, me.spent_token_names)
+      inp = input.request!('token-select', me.name, me.spent_token_names)
       me.output("Hikaru #{me.name} recovered token #{inp}")
       me.recover_token! inp
     end
@@ -106,8 +106,8 @@ module Online
       output "Hikaru (#{name}) antes #{token_name}"
     end
     def ante_choice
-      selection = @input.request!(name, (token_pool_names + ['none']))
-      return false if selection == 'none'
+      selection = @input.request!('token-select', name, (token_pool_names + ['pass']))
+      return output("#{name} passes ante.") && nil if selection == 'pass'
       ante_token! selection
     end
     def ante

@@ -4,7 +4,7 @@ require File.join(File.dirname(__FILE__), 'hikaru')
 require 'yaml'
 module Online
   class InputFetcher
-    attr_reader :issue, :message, :successful_input
+    attr_reader :issue, :message, :successful_input, :query
     def initialize prev
       @input_buffer = prev
       @pending_input = {}
@@ -23,7 +23,8 @@ module Online
       #We should maybe throw an error in this case.
     end
     
-    def request! name,options
+    def request! query,name,options
+      @query = query
       @pending_input[name] = options
       
       input_required(options.map{|o| "#{name}:#{o}"}.join(' ')) if @input_buffer.empty?
@@ -36,7 +37,8 @@ module Online
       @successful_input << @input_buffer.slice!(0)
       option
     end
-    def multi_request! hsh
+    def multi_request! query, hsh
+      @query = query
       responses = {}
       @pending_input = hsh.dup
       hsh.keys.count.times do
@@ -81,7 +83,7 @@ module Online
     def setup previous_inputs = []
       @input = InputFetcher.new(previous_inputs)
       @output = []
-      cs = @input.multi_request!('p1' => character_names, 'p2' => character_names)
+      cs = @input.multi_request!('character-names', 'p1' => character_names, 'p2' => character_names)
       output "Player one is playing as #{cs['p1']}"
       output "Player two is playing as #{cs['p2']}"
       
@@ -98,9 +100,11 @@ module Online
     def pending_input n
       @input.pending[n]
     end
-    def player_jsons
+    def player_jsons pl
       if @player1
         {
+          'query' => @input.query,
+          'pending_input' =>@input.pending[pl],
           'p1' => @player1.jsonify, 
           'p2' => @player2.jsonify,
           'winner' => (@winner ? @winner.name : nil),
@@ -170,7 +174,7 @@ module Online
       @player2.reset!  
     end
     def planning_and_ante
-      pairs = @input.multi_request!('p1' => @player1.possible_attack_pairs, 'p2' => @player2.possible_attack_pairs)
+      pairs = @input.multi_request!('attack_pairs', 'p1' => @player1.possible_attack_pairs, 'p2' => @player2.possible_attack_pairs)
       output "Both players have selected attack pairs..."
       
       ante
@@ -207,7 +211,7 @@ module Online
         @player1.clash!
         @player2.clash!
         # both should select new bases
-        new_bases = @input.multi_request!('p1' => @player1.base_names, 'p2' => @player2.base_names)
+        new_bases = @input.multi_request!('bases', 'p1' => @player1.base_names, 'p2' => @player2.base_names)
         @player1.resolve_clash! new_bases['p1']
         @player2.resolve_clash! new_bases['p2']
       end
