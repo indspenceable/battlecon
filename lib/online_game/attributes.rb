@@ -59,7 +59,7 @@ module Online
       end
     end
     def name
-      self.class.name.downcase.split('::').last
+      self.class.name.downcase.gsub('online::','')
     end
 
     # default properties - power, range, and priority are always printed on every card

@@ -174,17 +174,18 @@ html, body {
 }
 .hoverable > .hover {
   display: none;
+  position: absolute;
 }
 .hoverable:hover > .hover {
   display: block;
   position: absolute;
-  width: 500px;
+  top: 36px;
+  width: 400px;
+  z-index: 200;
 }
-
-.thumbnail {
-  width: 200px;
+.bases, .forms {
+  text-align: center;
 }
-
 
 /*
 

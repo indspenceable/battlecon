@@ -16,7 +16,7 @@ class ChallengesController < ApplicationController
     
     
     g = @challenge.submit_input!("#{pl}:#{params[:input]}")
-    pending_inputs
+    #pending_inputs
     render :json => {success: true, game: @challenge.load_game.player_jsons(pl)}
       #render :json => {success: false, output: Challenge.find(params[:id]).load_game.successful_inputs.join(', ')}
   end
